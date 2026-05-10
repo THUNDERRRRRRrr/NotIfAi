@@ -32,7 +32,17 @@ class OnboardingViewModel @Inject constructor(
     private val _currentStep = MutableStateFlow(STEP_WELCOME)
     val currentStep: StateFlow<Int> = _currentStep.asStateFlow()
 
-    private val _isPermissionGranted = MutableStateFlow(checkPermission(context))
+    private fun checkPermissionInternal(context: Context): Boolean {
+        val enabledListeners = Settings.Secure.getString(
+            context.contentResolver,
+            "enabled_notification_listeners",
+        ) ?: return false
+
+        val component = ComponentName(context, NotifListenerService::class.java)
+        return enabledListeners.contains(component.flattenToString())
+    }
+
+    private val _isPermissionGranted = MutableStateFlow(checkPermissionInternal(context))
     val isPermissionGranted: StateFlow<Boolean> = _isPermissionGranted.asStateFlow()
 
     // ── Actions ───────────────────────────────────────────────────────────────
@@ -53,13 +63,7 @@ class OnboardingViewModel @Inject constructor(
      * system Notification Access settings screen.
      */
     fun checkPermission(context: Context): Boolean {
-        val enabledListeners = Settings.Secure.getString(
-            context.contentResolver,
-            "enabled_notification_listeners",
-        ) ?: return false
-
-        val component = ComponentName(context, NotifListenerService::class.java)
-        val granted = enabledListeners.contains(component.flattenToString())
+        val granted = checkPermissionInternal(context)
         _isPermissionGranted.value = granted
         return granted
     }

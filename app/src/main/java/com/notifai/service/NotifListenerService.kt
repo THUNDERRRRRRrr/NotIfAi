@@ -126,7 +126,6 @@ class NotifListenerService : NotificationListenerService() {
         for (raw in batch) {
             runCatching {
                 val response = aiProviderManager.classifyNotification(
-                    packageName = raw.packageName,
                     appName = raw.appName,
                     title = raw.title,
                     body = raw.body,
@@ -144,7 +143,7 @@ class NotifListenerService : NotificationListenerService() {
                     reason = response.reason,
                     timestamp = raw.timestamp,
                     isBlocked = response.shouldBlock,
-                    aiProvider = aiProviderManager.lastUsedProvider,
+                    aiProvider = aiProviderManager.activeProvider.value,
                 )
 
                 repository.saveNotification(entity)

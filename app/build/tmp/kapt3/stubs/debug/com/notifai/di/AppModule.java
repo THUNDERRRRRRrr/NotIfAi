@@ -1,0 +1,66 @@
+package com.notifai.di;
+
+import android.content.Context;
+import androidx.room.Room;
+import com.notifai.data.db.NotificationDao;
+import com.notifai.data.db.NotificationDatabase;
+import com.notifai.data.repository.NotificationRepository;
+import dagger.Module;
+import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
+import javax.inject.Singleton;
+
+/**
+ * Hilt module that wires the entire data layer into the DI graph.
+ *
+ * All bindings are [Singleton] so that the database connection and
+ * repository state are shared across the whole application lifetime,
+ * including the [com.notifai.service.NotifListenerService].
+ */
+@dagger.Module()
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000*\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c7\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002J\u0012\u0010\u0003\u001a\u00020\u00042\b\b\u0001\u0010\u0005\u001a\u00020\u0004H\u0007J\u0010\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\tH\u0007J\u0012\u0010\n\u001a\u00020\t2\b\b\u0001\u0010\u0005\u001a\u00020\u0004H\u0007J\u0010\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\u0007H\u0007\u00a8\u0006\u000e"}, d2 = {"Lcom/notifai/di/AppModule;", "", "()V", "provideApplicationContext", "Landroid/content/Context;", "context", "provideNotificationDao", "Lcom/notifai/data/db/NotificationDao;", "database", "Lcom/notifai/data/db/NotificationDatabase;", "provideNotificationDatabase", "provideNotificationRepository", "Lcom/notifai/data/repository/NotificationRepository;", "dao", "app_debug"})
+@dagger.hilt.InstallIn(value = {dagger.hilt.components.SingletonComponent.class})
+public final class AppModule {
+    @org.jetbrains.annotations.NotNull()
+    public static final com.notifai.di.AppModule INSTANCE = null;
+    
+    private AppModule() {
+        super();
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
+    @org.jetbrains.annotations.NotNull()
+    public final com.notifai.data.db.NotificationDatabase provideNotificationDatabase(@dagger.hilt.android.qualifiers.ApplicationContext()
+    @org.jetbrains.annotations.NotNull()
+    android.content.Context context) {
+        return null;
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
+    @org.jetbrains.annotations.NotNull()
+    public final com.notifai.data.db.NotificationDao provideNotificationDao(@org.jetbrains.annotations.NotNull()
+    com.notifai.data.db.NotificationDatabase database) {
+        return null;
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
+    @org.jetbrains.annotations.NotNull()
+    public final com.notifai.data.repository.NotificationRepository provideNotificationRepository(@org.jetbrains.annotations.NotNull()
+    com.notifai.data.db.NotificationDao dao) {
+        return null;
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
+    @org.jetbrains.annotations.NotNull()
+    public final android.content.Context provideApplicationContext(@dagger.hilt.android.qualifiers.ApplicationContext()
+    @org.jetbrains.annotations.NotNull()
+    android.content.Context context) {
+        return null;
+    }
+}

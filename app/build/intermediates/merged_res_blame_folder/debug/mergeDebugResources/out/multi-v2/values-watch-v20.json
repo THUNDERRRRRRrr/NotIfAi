@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.notifai.app-mergeDebugResources-74:/values-watch-v20/values-watch-v20.xml",
+            "map": [
+                {
+                    "source": "/home/albert/.gradle/caches/8.13/transforms/b762784e3f6dc4479a4ef3d2b72d0305/transformed/appcompat-1.6.1/res/values-watch-v20/values-watch-v20.xml",
+                    "from": {
+                        "startLines": "2,5,8",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,214,385",
+                        "endLines": "4,7,10",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "209,380,553"
+                    }
+                }
+            ]
+        }
+    ]
+}
