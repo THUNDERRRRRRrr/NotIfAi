@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Font provider certificates for Google Play Services (Downloadable Fonts).
+
+        Copy the full certificate values from the official Android sample:
+        https://github.com/android/user-interface-samples/blob/main/DownloadableFonts/app/src/main/res/values/font_certs.xml
+
+        Both dev and prod entries are required for release builds.
+    -->
+    <array name="com_google_android_gms_fonts_certs">
+        <item>@array/com_google_android_gms_fonts_certs_dev</item>
+        <item>@array/com_google_android_gms_fonts_certs_prod</item>
+    </array>
+
+    <string-array name="com_google_android_gms_fonts_certs_dev">
+        <!-- TODO: paste SHA-256 dev certificate from the Android sample linked above -->
+    </string-array>
+
+    <string-array name="com_google_android_gms_fonts_certs_prod">
+        <!-- TODO: paste SHA-256 prod certificate from the Android sample linked above -->
+    </string-array>
+</resources>

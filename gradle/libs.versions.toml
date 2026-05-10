@@ -34,6 +34,7 @@ navigationCompose = "2.8.4"
 # Core
 coreKtx = "1.15.0"
 activityCompose = "1.9.3"
+accompanist = "0.34.0"
 
 [libraries]
 # AndroidX Core
@@ -80,6 +81,12 @@ lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-ru
 
 # Navigation Compose
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+
+# Google Fonts (version managed by Compose BOM)
+androidx-compose-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts" }
+
+# Accompanist
+accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
