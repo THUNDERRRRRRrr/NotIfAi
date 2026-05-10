@@ -12,10 +12,7 @@ import javax.inject.Singleton
 
 /**
  * Single source of truth for notification data.
- *
- * All ViewModels and Services interact with this class, never with the DAO
- * directly. This keeps the database implementation detail hidden and makes
- * the layer easy to swap or mock in tests.
+ * ViewModels and Services interact only with this class, never with the DAO directly.
  */
 @Singleton
 class NotificationRepository @Inject constructor(
@@ -24,18 +21,18 @@ class NotificationRepository @Inject constructor(
 
     // ── Writes ────────────────────────────────────────────────────────────────
 
-    /**
-     * Persists a classified [NotificationEntity] to the database.
-     * Must be called from a coroutine / suspend context.
-     */
     suspend fun saveNotification(entity: NotificationEntity) =
         dao.insertNotification(entity)
 
-    /** Removes all notifications older than [timestamp] (Unix epoch ms). */
+    suspend fun unblockNotification(id: Long) =
+        dao.updateBlockedStatus(id, isBlocked = false)
+
+    suspend fun deleteNotification(id: Long) =
+        dao.deleteById(id)
+
     suspend fun pruneOlderThan(timestamp: Long) =
         dao.deleteNotificationsOlderThan(timestamp)
 
-    /** Wipes the entire notification history. */
     suspend fun clearAll() = dao.deleteAll()
 
     // ── Reads ─────────────────────────────────────────────────────────────────
@@ -55,15 +52,8 @@ class NotificationRepository @Inject constructor(
     // ── Dashboard stats ───────────────────────────────────────────────────────
 
     /**
-     * Emits a fresh [DashboardStats] whenever any of the underlying counts
-     * changes.  Uses [combine] so the downstream collector always sees a
-     * consistent snapshot — no partial updates.
-     *
-     * "Today" resets at local midnight on each subscription; for long-lived
-     * collectors (e.g. a ViewModel that survives past midnight) the stats
-     * will be slightly stale until the app is restarted.  A production
-     * implementation should post a midnight-reset work request via
-     * WorkManager.
+     * Emits a fresh [DashboardStats] whenever any underlying count changes.
+     * Uses [combine] so the UI always receives a complete, consistent snapshot.
      */
     fun getDashboardStats(): Flow<DashboardStats> {
         val startOfDay = todayMidnightMillis()
@@ -82,9 +72,11 @@ class NotificationRepository @Inject constructor(
         }
     }
 
+    fun getTodayBlockedCount(): Flow<Int> =
+        dao.getTodayBlockedCount(todayMidnightMillis())
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    /** Returns Unix epoch ms for midnight (00:00:00.000) of the current day. */
     private fun todayMidnightMillis(): Long =
         Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)

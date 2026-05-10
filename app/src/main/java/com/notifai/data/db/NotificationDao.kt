@@ -16,13 +16,19 @@ interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNotification(entity: NotificationEntity)
 
+    @Query("UPDATE notifications SET is_blocked = :isBlocked WHERE id = :id")
+    suspend fun updateBlockedStatus(id: Long, isBlocked: Boolean)
+
+    @Query("DELETE FROM notifications WHERE id = :id")
+    suspend fun deleteById(id: Long)
+
     @Query("DELETE FROM notifications WHERE timestamp < :timestamp")
     suspend fun deleteNotificationsOlderThan(timestamp: Long)
 
     @Query("DELETE FROM notifications")
     suspend fun deleteAll()
 
-    // ── Full list reads ───────────────────────────────────────────────────────
+    // ── Full-list reads ───────────────────────────────────────────────────────
 
     @Query("SELECT * FROM notifications ORDER BY timestamp DESC")
     fun getAllNotifications(): Flow<List<NotificationEntity>>
@@ -36,13 +42,11 @@ interface NotificationDao {
     @Query("SELECT * FROM notifications WHERE category = :category ORDER BY timestamp DESC")
     fun getNotificationsByCategory(category: Category): Flow<List<NotificationEntity>>
 
-    // ── Aggregated counts (today = midnight of current day) ───────────────────
+    // ── Aggregated counts ─────────────────────────────────────────────────────
 
     /**
-     * Returns the number of blocked notifications since the given [startOfDay]
-     * timestamp (Unix epoch ms, typically midnight local time).
-     * The caller — [com.notifai.data.repository.NotificationRepository] —
-     * supplies [startOfDay] so this query stays testable without clock mocking.
+     * [startOfDay] is Unix epoch ms for local midnight, supplied by the
+     * repository so this query stays clock-agnostic and easily testable.
      */
     @Query(
         """
