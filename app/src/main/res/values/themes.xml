@@ -1,0 +1,4 @@
+<resources>
+    <!-- Base application theme. Material3 + no action bar so Compose handles the UI. -->
+    <style name="Theme.NotifAI" parent="Theme.Material3.DayNight.NoActionBar" />
+</resources>
