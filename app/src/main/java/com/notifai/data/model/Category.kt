@@ -2,7 +2,7 @@ package com.notifai.data.model
 
 /**
  * AI-assigned category for a notification.
- * Used as a Room column (stored as String via [CategoryConverter]).
+ * Stored as its [name] string in Room via [CategoryConverter].
  */
 enum class Category {
     OTP,
