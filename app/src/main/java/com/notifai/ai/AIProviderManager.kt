@@ -1,40 +1,48 @@
 package com.notifai.ai
 
 import com.notifai.data.model.AIResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Orchestrates the multi-tier AI fallback chain:
- *   Groq → OpenRouter → Gemini
- *
- * TODO: Full implementation by teammate.
- * This stub satisfies the compiler so the rest of the project can be built
- * and tested independently.
- */
 @Singleton
-class AIProviderManager @Inject constructor() {
+class AIProviderManager @Inject constructor(
+    private val groqProvider: GroqProvider,
+    private val openRouterProvider: OpenRouterProvider,
+    private val geminiProvider: GeminiProvider
+) {
+    private val _activeProvider = MutableStateFlow("none")
+    val activeProvider: StateFlow<String> = _activeProvider.asStateFlow()
 
-    /**
-     * The identifier of the provider that handled the most recent
-     * classification call ("groq", "openrouter", or "gemini").
-     * Set by the active provider implementation.
-     */
-    var lastUsedProvider: String = "unknown"
-        internal set
-
-    /**
-     * Classifies a notification and returns an [AIResponse].
-     *
-     * @throws NotImplementedError until the real implementation is wired in.
-     */
-    suspend fun classifyNotification(
-        packageName: String,
-        appName: String,
-        title: String,
-        body: String,
-    ): AIResponse {
-        // Placeholder — replace with Groq → OpenRouter → Gemini fallback chain
-        throw NotImplementedError("AIProviderManager.classifyNotification is not yet implemented")
+    suspend fun classifyNotification(appName: String, title: String, body: String): AIResponse {
+        try {
+            _activeProvider.value = "groq"
+            return groqProvider.classify(appName, title, body)
+        } catch (e: Exception) {
+            // Fallback to OpenRouter
+        }
+        
+        try {
+            _activeProvider.value = "openrouter"
+            return openRouterProvider.classify(appName, title, body)
+        } catch (e: Exception) {
+            // Fallback to Gemini
+        }
+        
+        try {
+            _activeProvider.value = "gemini"
+            return geminiProvider.classify(appName, title, body)
+        } catch (e: Exception) {
+            // All failed
+            _activeProvider.value = "none"
+            return AIResponse(
+                category = "UNKNOWN",
+                confidence = 0f,
+                reason = "All AI providers failed: ${e.message}",
+                shouldBlock = false
+            )
+        }
     }
 }
