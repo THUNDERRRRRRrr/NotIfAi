@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.2" type="partial_results">
+    <map id="UnsafeImplicitIntentLaunch">
+            <map id="actionsSent">
+                    <map id="android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS (used to start an activity)">
+                        <location id="0"
+                            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/dashboard/DashboardScreen.kt"
+                            line="132"
+                            column="37"
+                            startOffset="5670"
+                            endLine="132"
+                            endColumn="91"
+                            endOffset="5724"/>
+                        <location id="1"
+                            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/onboarding/OnboardingScreen.kt"
+                            line="114"
+                            column="29"
+                            startOffset="4424"
+                            endLine="114"
+                            endColumn="83"
+                            endOffset="4478"/>
+                    </map>
+            </map>
+    </map>
+    <map id="UnsafeIntentLaunch">
+            <map id="unprotected">
+                <entry
+                    name="com.notifai.MainActivity"
+                    boolean="true"/>
+            </map>
+    </map>
+    <map id="UnusedResources">
+        <entry
+            name="model"
+            string="array[com_google_android_gms_fonts_certs(U),com_google_android_gms_fonts_certs_dev(U),com_google_android_gms_fonts_certs_prod(U)],drawable[ic_launcher_background(U),ic_launcher_foreground(U)],mipmap[ic_launcher(U),ic_launcher_round(U)],string[app_name(U)],style[Theme_NotifAI(U),Theme_Material3_DayNight_NoActionBar(R)];0^1^2,5^3^4,6^3^4,8^9;;;"/>
+    </map>
+
+</incidents>

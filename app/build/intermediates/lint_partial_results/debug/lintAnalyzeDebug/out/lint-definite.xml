@@ -1,0 +1,1266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.2" type="incidents">
+
+    <incident
+        id="OldTargetApi"
+        severity="warning"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details.">
+        <fix-replace
+            description="Update targetSdkVersion to 36"
+            oldString="35"
+            replacement="36"
+            priority="0"/>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="17"
+            column="9"
+            startOffset="383"
+            endLine="17"
+            endColumn="23"
+            endOffset="397"/>
+    </incident>
+
+    <incident
+        id="AndroidGradlePluginVersion"
+        severity="warning"
+        message="A newer version of Gradle than 8.13 is available: 8.14.5">
+        <fix-replace
+            description="Update to 8.14.5"
+            oldString="8.13"
+            replacement="8.14.5"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/wrapper/gradle-wrapper.properties"
+            line="3"
+            column="17"
+            startOffset="81"
+            endLine="3"
+            endColumn="79"
+            endOffset="143"/>
+    </incident>
+
+    <incident
+        id="AndroidGradlePluginVersion"
+        severity="warning"
+        message="A newer version of com.android.application than 8.13.2 is available: 9.2.1">
+        <fix-replace
+            description="Replace with 9.2.1"
+            family="Update versions"
+            oldString="8.13.2"
+            replacement="9.2.1"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="3"
+            column="7"
+            startOffset="36"
+            endLine="3"
+            endColumn="15"
+            endOffset="44"/>
+        <map>
+            <entry
+                name="coordinate"
+                string="com.android.application"/>
+            <entry
+                name="revision"
+                string="9.2.1"/>
+        </map>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of `compileSdkVersion` than 35 is available: 36">
+        <fix-replace
+            description="Set compileSdkVersion to 36"
+            oldString="35"
+            replacement="36"
+            priority="0"/>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="12"
+            column="5"
+            startOffset="280"
+            endLine="12"
+            endColumn="20"
+            endOffset="295"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.03 is available: 2026.05.00">
+        <fix-replace
+            description="Change to 2026.05.00"
+            family="Update versions"
+            oldString="2024.09.03"
+            replacement="2026.05.00"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="8"
+            column="14"
+            startOffset="109"
+            endLine="8"
+            endColumn="26"
+            endOffset="121"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.hilt:hilt-navigation-compose than 1.2.0 is available: 1.3.0">
+        <fix-replace
+            description="Change to 1.3.0"
+            family="Update versions"
+            oldString="1.2.0"
+            replacement="1.3.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="12"
+            column="25"
+            startOffset="168"
+            endLine="12"
+            endColumn="32"
+            endOffset="175"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.4">
+        <fix-replace
+            description="Change to 2.8.4"
+            family="Update versions"
+            oldString="2.6.1"
+            replacement="2.8.4"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="15"
+            column="8"
+            startOffset="191"
+            endLine="15"
+            endColumn="15"
+            endOffset="198"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.4">
+        <fix-replace
+            description="Change to 2.8.4"
+            family="Update versions"
+            oldString="2.6.1"
+            replacement="2.8.4"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="15"
+            column="8"
+            startOffset="191"
+            endLine="15"
+            endColumn="15"
+            endOffset="198"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.4">
+        <fix-replace
+            description="Change to 2.8.4"
+            family="Update versions"
+            oldString="2.6.1"
+            replacement="2.8.4"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="15"
+            column="8"
+            startOffset="191"
+            endLine="15"
+            endColumn="15"
+            endOffset="198"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.security:security-crypto than 1.1.0-alpha06 is available: 1.1.0">
+        <fix-replace
+            description="Change to 1.1.0"
+            family="Update versions"
+            oldString="1.1.0-alpha06"
+            replacement="1.1.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="26"
+            column="18"
+            startOffset="380"
+            endLine="26"
+            endColumn="33"
+            endOffset="395"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.10.0">
+        <fix-replace
+            description="Change to 2.10.0"
+            family="Update versions"
+            oldString="2.8.7"
+            replacement="2.10.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="29"
+            column="13"
+            startOffset="433"
+            endLine="29"
+            endColumn="20"
+            endOffset="440"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.7 is available: 2.10.0">
+        <fix-replace
+            description="Change to 2.10.0"
+            family="Update versions"
+            oldString="2.8.7"
+            replacement="2.10.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="29"
+            column="13"
+            startOffset="433"
+            endLine="29"
+            endColumn="20"
+            endOffset="440"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.10.0">
+        <fix-replace
+            description="Change to 2.10.0"
+            family="Update versions"
+            oldString="2.8.7"
+            replacement="2.10.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="29"
+            column="13"
+            startOffset="433"
+            endLine="29"
+            endColumn="20"
+            endOffset="440"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-ktx than 2.8.7 is available: 2.10.0">
+        <fix-replace
+            description="Change to 2.10.0"
+            family="Update versions"
+            oldString="2.8.7"
+            replacement="2.10.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="29"
+            column="13"
+            startOffset="433"
+            endLine="29"
+            endColumn="20"
+            endOffset="440"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.navigation:navigation-compose than 2.8.4 is available: 2.9.8">
+        <fix-replace
+            description="Change to 2.9.8"
+            family="Update versions"
+            oldString="2.8.4"
+            replacement="2.9.8"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="32"
+            column="21"
+            startOffset="483"
+            endLine="32"
+            endColumn="28"
+            endOffset="490"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.18.0">
+        <fix-replace
+            description="Change to 1.18.0"
+            family="Update versions"
+            oldString="1.15.0"
+            replacement="1.18.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="35"
+            column="11"
+            startOffset="509"
+            endLine="35"
+            endColumn="19"
+            endOffset="517"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0">
+        <fix-replace
+            description="Change to 1.13.0"
+            family="Update versions"
+            oldString="1.9.3"
+            replacement="1.13.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="36"
+            column="19"
+            startOffset="536"
+            endLine="36"
+            endColumn="26"
+            endOffset="543"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.android.material:material than 1.12.0 is available: 1.13.0">
+        <fix-replace
+            description="Change to 1.13.0"
+            family="Update versions"
+            oldString="1.12.0"
+            replacement="1.13.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="38"
+            column="12"
+            startOffset="578"
+            endLine="38"
+            endColumn="20"
+            endOffset="586"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.3.21">
+        <fix-replace
+            description="Change to 2.3.21"
+            family="Update versions"
+            oldString="2.0.21"
+            replacement="2.3.21"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="4"
+            column="10"
+            startOffset="54"
+            endLine="4"
+            endColumn="18"
+            endOffset="62"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlin.kapt than 2.0.21 is available: 2.3.21">
+        <fix-replace
+            description="Change to 2.3.21"
+            family="Update versions"
+            oldString="2.0.21"
+            replacement="2.3.21"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="4"
+            column="10"
+            startOffset="54"
+            endLine="4"
+            endColumn="18"
+            endOffset="62"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.3.21">
+        <fix-replace
+            description="Change to 2.3.21"
+            family="Update versions"
+            oldString="2.0.21"
+            replacement="2.3.21"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="4"
+            column="10"
+            startOffset="54"
+            endLine="4"
+            endColumn="18"
+            endOffset="62"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.google.dagger.hilt.android than 2.52 is available: 2.59.2">
+        <fix-replace
+            description="Change to 2.59.2"
+            family="Update versions"
+            oldString="2.52"
+            replacement="2.59.2"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="11"
+            column="8"
+            startOffset="137"
+            endLine="11"
+            endColumn="14"
+            endOffset="143"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.google.dagger:hilt-android than 2.52 is available: 2.59.2">
+        <fix-replace
+            description="Change to 2.59.2"
+            family="Update versions"
+            oldString="2.52"
+            replacement="2.59.2"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="11"
+            column="8"
+            startOffset="137"
+            endLine="11"
+            endColumn="14"
+            endOffset="143"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.google.dagger:hilt-android-compiler than 2.52 is available: 2.59.2">
+        <fix-replace
+            description="Change to 2.59.2"
+            family="Update versions"
+            oldString="2.52"
+            replacement="2.59.2"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="11"
+            column="8"
+            startOffset="137"
+            endLine="11"
+            endColumn="14"
+            endOffset="143"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.squareup.retrofit2:retrofit than 2.11.0 is available: 3.0.0">
+        <fix-replace
+            description="Change to 3.0.0"
+            family="Update versions"
+            oldString="2.11.0"
+            replacement="3.0.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="18"
+            column="12"
+            startOffset="235"
+            endLine="18"
+            endColumn="20"
+            endOffset="243"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.squareup.okhttp3:logging-interceptor than 4.12.0 is available: 5.3.2">
+        <fix-replace
+            description="Change to 5.3.2"
+            family="Update versions"
+            oldString="4.12.0"
+            replacement="5.3.2"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="19"
+            column="10"
+            startOffset="253"
+            endLine="19"
+            endColumn="18"
+            endOffset="261"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.squareup.okhttp3:okhttp than 4.12.0 is available: 5.3.2">
+        <fix-replace
+            description="Change to 5.3.2"
+            family="Update versions"
+            oldString="4.12.0"
+            replacement="5.3.2"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="19"
+            column="10"
+            startOffset="253"
+            endLine="19"
+            endColumn="18"
+            endOffset="261"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.squareup.retrofit2:converter-gson than 2.11.0 is available: 3.0.0">
+        <fix-replace
+            description="Change to 3.0.0"
+            family="Update versions"
+            oldString="2.11.0"
+            replacement="3.0.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="20"
+            column="17"
+            startOffset="278"
+            endLine="20"
+            endColumn="25"
+            endOffset="286"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.8.1 is available: 1.11.0">
+        <fix-replace
+            description="Change to 1.11.0"
+            family="Update versions"
+            oldString="1.8.1"
+            replacement="1.11.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="23"
+            column="14"
+            startOffset="314"
+            endLine="23"
+            endColumn="21"
+            endOffset="321"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of com.google.accompanist:accompanist-drawablepainter than 0.34.0 is available: 0.37.3">
+        <fix-replace
+            description="Change to 0.37.3"
+            family="Update versions"
+            oldString="0.34.0"
+            replacement="0.37.3"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="37"
+            column="15"
+            startOffset="558"
+            endLine="37"
+            endColumn="23"
+            endOffset="566"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of io.mockk:mockk than 1.13.10 is available: 1.14.9">
+        <fix-replace
+            description="Change to 1.14.9"
+            family="Update versions"
+            oldString="1.13.10"
+            replacement="1.14.9"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="42"
+            column="9"
+            startOffset="623"
+            endLine="42"
+            endColumn="18"
+            endOffset="632"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of app.cash.turbine:turbine than 1.1.0 is available: 1.2.1">
+        <fix-replace
+            description="Change to 1.2.1"
+            family="Update versions"
+            oldString="1.1.0"
+            replacement="1.2.1"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="43"
+            column="11"
+            startOffset="643"
+            endLine="43"
+            endColumn="18"
+            endOffset="650"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-test than 1.8.1 is available: 1.11.0">
+        <fix-replace
+            description="Change to 1.11.0"
+            family="Update versions"
+            oldString="1.8.1"
+            replacement="1.11.0"
+            priority="0"/>
+        <location
+            file="$HOME/NotIfAi/gradle/libs.versions.toml"
+            line="44"
+            column="18"
+            startOffset="668"
+            endLine="44"
+            endColumn="25"
+            endOffset="675"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 26. Merge all the resources in this folder into `mipmap-anydpi`.">
+        <fix-data file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/mipmap-anydpi-v26" folderName="mipmap-anydpi" requiresApi="26"/>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/mipmap-anydpi-v26"/>
+    </incident>
+
+    <incident
+        id="MonochromeLauncherIcon"
+        severity="warning"
+        message="The application adaptive icon is missing a monochrome tag">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/mipmap-anydpi-v26/ic_launcher.xml"
+            line="2"
+            column="1"
+            startOffset="39"
+            endLine="5"
+            endColumn="17"
+            endOffset="272"/>
+    </incident>
+
+    <incident
+        id="MonochromeLauncherIcon"
+        severity="warning"
+        message="The application adaptive roundIcon is missing a monochrome tag">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/mipmap-anydpi-v26/ic_launcher_round.xml"
+            line="2"
+            column="1"
+            startOffset="39"
+            endLine="5"
+            endColumn="17"
+            endOffset="272"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1400"
+                    endOffset="1405"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1405"
+                    endOffset="1406"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1406"
+                    endOffset="1407"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1431"
+                    endOffset="1439"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+            line="42"
+            column="9"
+            startOffset="1382"
+            endLine="42"
+            endColumn="33"
+            endOffset="1406"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1514"
+                    endOffset="1519"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1519"
+                    endOffset="1520"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1520"
+                    endOffset="1521"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1551"
+                    endOffset="1559"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+            line="46"
+            column="9"
+            startOffset="1496"
+            endLine="46"
+            endColumn="33"
+            endOffset="1520"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1630"
+                    endOffset="1635"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1635"
+                    endOffset="1636"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1636"
+                    endOffset="1637"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="1663"
+                    endOffset="1671"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+            line="50"
+            column="9"
+            startOffset="1612"
+            endLine="50"
+            endColumn="33"
+            endOffset="1636"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2278"
+                    endOffset="2283"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2283"
+                    endOffset="2284"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2284"
+                    endOffset="2285"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2325"
+                    endOffset="2333"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+            line="71"
+            column="9"
+            startOffset="2260"
+            endLine="71"
+            endColumn="33"
+            endOffset="2284"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2512"
+                    endOffset="2517"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2517"
+                    endOffset="2518"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2518"
+                    endOffset="2519"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="2568"
+                    endOffset="2576"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+            line="77"
+            column="9"
+            startOffset="2494"
+            endLine="77"
+            endColumn="33"
+            endOffset="2518"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="3096"
+                    endOffset="3101"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="3101"
+                    endOffset="3102"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="3102"
+                    endOffset="3103"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+                    startOffset="3152"
+                    endOffset="3160"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ai/ApiKeyManager.kt"
+            line="93"
+            column="9"
+            startOffset="3078"
+            endLine="93"
+            endColumn="33"
+            endOffset="3102"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/apps/AppSettingsViewModel.kt"
+                    startOffset="2356"
+                    endOffset="2361"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/apps/AppSettingsViewModel.kt"
+                    startOffset="2361"
+                    endOffset="2362"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/apps/AppSettingsViewModel.kt"
+                    startOffset="2362"
+                    endOffset="2363"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/apps/AppSettingsViewModel.kt"
+                    startOffset="2396"
+                    endOffset="2404"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/apps/AppSettingsViewModel.kt"
+            line="62"
+            column="9"
+            startOffset="2350"
+            endLine="62"
+            endColumn="21"
+            endOffset="2362"/>
+    </incident>
+
+    <incident
+        id="UseKtx"
+        severity="warning"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?">
+        <fix-composite
+            description="Replace with the edit extension function"
+            family="Replace with the edit extension function"
+            robot="true"
+            independent="true">
+            <fix-replace
+                description="Replace with edit"
+                robot="true"
+                independent="true"
+                oldString="edit("
+                replacement="edit"
+                reformat="value"
+                imports="androidx.core.content.edit"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/onboarding/OnboardingViewModel.kt"
+                    startOffset="2948"
+                    endOffset="2953"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with  {"
+                robot="true"
+                independent="true"
+                oldString=")"
+                replacement=" {"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/onboarding/OnboardingViewModel.kt"
+                    startOffset="2953"
+                    endOffset="2954"/>
+            </fix-replace>
+            <fix-replace
+                description="Delete &quot;.&quot;"
+                robot="true"
+                independent="true"
+                oldString="."
+                replacement=""
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/onboarding/OnboardingViewModel.kt"
+                    startOffset="2954"
+                    endOffset="2955"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with }"
+                robot="true"
+                independent="true"
+                oldString=".apply()"
+                replacement="}"
+                priority="0">
+                <range
+                    file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/onboarding/OnboardingViewModel.kt"
+                    startOffset="2985"
+                    endOffset="2993"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/onboarding/OnboardingViewModel.kt"
+            line="83"
+            column="9"
+            startOffset="2942"
+            endLine="83"
+            endColumn="21"
+            endOffset="2954"/>
+    </incident>
+
+</incidents>

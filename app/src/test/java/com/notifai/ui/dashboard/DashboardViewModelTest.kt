@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.provider.Settings
 import app.cash.turbine.test
+import com.notifai.ai.AIProviderManager
 import com.notifai.data.model.DashboardStats
 import com.notifai.data.model.NotificationEntity
 import com.notifai.data.repository.NotificationRepository
@@ -17,6 +18,7 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.unmockkConstructor
 import io.mockk.unmockkStatic
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -36,6 +38,7 @@ class DashboardViewModelTest {
     private val repository: NotificationRepository = mockk()
     private val context: Context = mockk()
     private val contentResolver: ContentResolver = mockk()
+    private val aiProviderManager: AIProviderManager = mockk()
 
     @Before
     fun setup() {
@@ -65,6 +68,10 @@ class DashboardViewModelTest {
         )
 
         every { repository.getTodayBlockedCount() } returns flowOf(5)
+
+        every { aiProviderManager.activeProvider } returns MutableStateFlow("Groq")
+        every { aiProviderManager.lastConfidence } returns MutableStateFlow(0.9f)
+        every { aiProviderManager.cascadeCount } returns MutableStateFlow(0)
     }
 
     @After
@@ -75,7 +82,7 @@ class DashboardViewModelTest {
 
     @Test
     fun `dashboardStats initially emits Loading, then Success`() = runTest {
-        viewModel = DashboardViewModel(repository, context)
+        viewModel = DashboardViewModel(repository, aiProviderManager, context)
 
         viewModel.dashboardStats.test {
             // First emission is either Loading or already Success depending on how quickly flow is collected
@@ -96,7 +103,7 @@ class DashboardViewModelTest {
             throw RuntimeException(errorMessage)
         }
 
-        viewModel = DashboardViewModel(repository, context)
+        viewModel = DashboardViewModel(repository, aiProviderManager, context)
 
         viewModel.dashboardStats.test {
             val item = awaitItem()
@@ -114,7 +121,7 @@ class DashboardViewModelTest {
         val mockNotifications = List(30) { mockk<NotificationEntity>(relaxed = true) }
         every { repository.getAllNotifications() } returns flowOf(mockNotifications)
 
-        viewModel = DashboardViewModel(repository, context)
+        viewModel = DashboardViewModel(repository, aiProviderManager, context)
 
         viewModel.recentNotifications.test {
             val item = awaitItem()
@@ -129,7 +136,7 @@ class DashboardViewModelTest {
 
     @Test
     fun `blockedToday returns value from repository`() = runTest {
-        viewModel = DashboardViewModel(repository, context)
+        viewModel = DashboardViewModel(repository, aiProviderManager, context)
 
         viewModel.blockedToday.test {
             val item = awaitItem()
@@ -148,7 +155,7 @@ class DashboardViewModelTest {
         val expectedComponent = "com.notifai/com.notifai.service.NotifListenerService"
         every { Settings.Secure.getString(contentResolver, "enabled_notification_listeners") } returns expectedComponent
 
-        viewModel = DashboardViewModel(repository, context)
+        viewModel = DashboardViewModel(repository, aiProviderManager, context)
         
         viewModel.isServiceRunning.test {
             assertEquals(true, awaitItem())
@@ -159,7 +166,7 @@ class DashboardViewModelTest {
     fun `checkServiceRunning returns false when component is not in enabled_notification_listeners`() = runTest {
         every { Settings.Secure.getString(contentResolver, "enabled_notification_listeners") } returns "some.other.service"
 
-        viewModel = DashboardViewModel(repository, context)
+        viewModel = DashboardViewModel(repository, aiProviderManager, context)
 
         viewModel.isServiceRunning.test {
             assertEquals(false, awaitItem())
@@ -170,7 +177,7 @@ class DashboardViewModelTest {
     fun `refreshServiceStatus updates isServiceRunning value`() = runTest {
         every { Settings.Secure.getString(contentResolver, "enabled_notification_listeners") } returns ""
 
-        viewModel = DashboardViewModel(repository, context)
+        viewModel = DashboardViewModel(repository, aiProviderManager, context)
 
         viewModel.isServiceRunning.test {
             assertEquals(false, awaitItem())

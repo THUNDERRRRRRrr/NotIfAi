@@ -10,6 +10,7 @@ import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import android.util.LruCache
 import androidx.core.app.NotificationCompat
 import com.notifai.MainActivity
 import com.notifai.ai.AIProviderManager
@@ -51,6 +52,9 @@ class NotifListenerService : NotificationListenerService() {
 
     /** Thread-safe queue of raw notifications waiting to be classified. */
     private val pendingQueue = ConcurrentLinkedQueue<RawNotification>()
+
+    /** Cache of recently processed notifications to avoid duplicate API calls and DB entries. */
+    private val processedCache = LruCache<String, Boolean>(50)
 
     private var batchJob: Job? = null
 
@@ -122,11 +126,17 @@ class NotifListenerService : NotificationListenerService() {
             while (pendingQueue.isNotEmpty()) {
                 pendingQueue.poll()?.let(::add)
             }
-        }
+        }.distinctBy { "${it.packageName}|${it.title}|${it.body}" }
 
         Log.d(TAG, "Processing batch of ${batch.size} notification(s)")
 
         for (raw in batch) {
+            val cacheKey = "${raw.packageName}|${raw.title}|${raw.body}"
+            if (processedCache.get(cacheKey) != null) {
+                continue
+            }
+            processedCache.put(cacheKey, true)
+
             runCatching {
                 val response = aiProviderManager.classifyNotification(
                     appName = raw.appName,
