@@ -94,6 +94,12 @@ dependencies {
 
     // ── Navigation Compose ─────────────────────────────────────────────────
     implementation(libs.navigation.compose)
+
+    // ── Google Fonts (Inter) ───────────────────────────────────────────────
+    implementation(libs.androidx.compose.ui.text.google.fonts)
+
+    // ── Accompanist ────────────────────────────────────────────────────────
+    implementation(libs.accompanist.drawablepainter)
 }
 
 // Allow references to generated code (Hilt)
