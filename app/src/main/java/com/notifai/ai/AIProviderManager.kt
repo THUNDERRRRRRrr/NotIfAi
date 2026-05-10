@@ -20,21 +20,21 @@ class AIProviderManager @Inject constructor(
         try {
             _activeProvider.value = "groq"
             return groqProvider.classify(appName, title, body)
-        } catch (e: Exception) {
+        } catch (e: com.notifai.ai.model.GroqException) {
             // Fallback to OpenRouter
         }
         
         try {
             _activeProvider.value = "openrouter"
             return openRouterProvider.classify(appName, title, body)
-        } catch (e: Exception) {
+        } catch (e: com.notifai.ai.model.OpenRouterException) {
             // Fallback to Gemini
         }
         
         try {
             _activeProvider.value = "gemini"
             return geminiProvider.classify(appName, title, body)
-        } catch (e: Exception) {
+        } catch (e: com.notifai.ai.model.GeminiException) {
             // All failed
             _activeProvider.value = "none"
             return AIResponse(

@@ -53,6 +53,7 @@ class GroqProvider @Inject constructor(
                 
             return gson.fromJson(content, AIResponse::class.java)
         } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
             if (e is GroqException) throw e
             throw GroqException("Network or parsing error: ${e.message}")
         }

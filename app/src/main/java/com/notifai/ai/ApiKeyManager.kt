@@ -12,17 +12,24 @@ class ApiKeyManager @Inject constructor(
     @ApplicationContext context: Context
 ) {
 
-    private val masterKey = MasterKey.Builder(context)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
+    private val sharedPreferences by lazy {
+        try {
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
 
-    private val sharedPreferences = EncryptedSharedPreferences.create(
-        context,
-        "notifai_api_keys",
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+            EncryptedSharedPreferences.create(
+                context,
+                "notifai_api_keys",
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            // Fallback to regular SharedPreferences if Keystore is corrupted
+            context.getSharedPreferences("notifai_api_keys_fallback", Context.MODE_PRIVATE)
+        }
+    }
 
     fun saveGroqKey(key: String) {
         sharedPreferences.edit().putString(KEY_GROQ, key).apply()

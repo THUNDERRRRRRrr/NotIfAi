@@ -50,6 +50,7 @@ class OpenRouterProvider @Inject constructor(
                 
             return gson.fromJson(content, AIResponse::class.java)
         } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
             if (e is OpenRouterException) throw e
             throw OpenRouterException("Network or parsing error: ${e.message}")
         }
