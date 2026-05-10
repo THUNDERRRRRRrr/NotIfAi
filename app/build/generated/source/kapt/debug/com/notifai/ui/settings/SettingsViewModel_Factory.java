@@ -1,6 +1,6 @@
 package com.notifai.ui.settings;
 
-import com.notifai.security.ApiKeyManager;
+import com.notifai.ai.ApiKeyManager;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.QualifierMetadata;

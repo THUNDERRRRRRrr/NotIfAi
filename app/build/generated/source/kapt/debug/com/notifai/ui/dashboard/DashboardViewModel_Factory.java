@@ -1,6 +1,7 @@
 package com.notifai.ui.dashboard;
 
 import android.content.Context;
+import com.notifai.ai.AIProviderManager;
 import com.notifai.data.repository.NotificationRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -27,25 +28,30 @@ import javax.inject.Provider;
 public final class DashboardViewModel_Factory implements Factory<DashboardViewModel> {
   private final Provider<NotificationRepository> repositoryProvider;
 
+  private final Provider<AIProviderManager> aiProviderManagerProvider;
+
   private final Provider<Context> contextProvider;
 
   public DashboardViewModel_Factory(Provider<NotificationRepository> repositoryProvider,
-      Provider<Context> contextProvider) {
+      Provider<AIProviderManager> aiProviderManagerProvider, Provider<Context> contextProvider) {
     this.repositoryProvider = repositoryProvider;
+    this.aiProviderManagerProvider = aiProviderManagerProvider;
     this.contextProvider = contextProvider;
   }
 
   @Override
   public DashboardViewModel get() {
-    return newInstance(repositoryProvider.get(), contextProvider.get());
+    return newInstance(repositoryProvider.get(), aiProviderManagerProvider.get(), contextProvider.get());
   }
 
   public static DashboardViewModel_Factory create(
-      Provider<NotificationRepository> repositoryProvider, Provider<Context> contextProvider) {
-    return new DashboardViewModel_Factory(repositoryProvider, contextProvider);
+      Provider<NotificationRepository> repositoryProvider,
+      Provider<AIProviderManager> aiProviderManagerProvider, Provider<Context> contextProvider) {
+    return new DashboardViewModel_Factory(repositoryProvider, aiProviderManagerProvider, contextProvider);
   }
 
-  public static DashboardViewModel newInstance(NotificationRepository repository, Context context) {
-    return new DashboardViewModel(repository, context);
+  public static DashboardViewModel newInstance(NotificationRepository repository,
+      AIProviderManager aiProviderManager, Context context) {
+    return new DashboardViewModel(repository, aiProviderManager, context);
   }
 }

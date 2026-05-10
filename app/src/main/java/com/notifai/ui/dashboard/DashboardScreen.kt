@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,10 +28,13 @@ import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -65,6 +69,7 @@ import com.notifai.ui.theme.NotifAITheme
 import com.notifai.ui.theme.OtpBlue
 import com.notifai.ui.theme.PromotionalOrange
 import com.notifai.ui.theme.SpamRed
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,6 +80,9 @@ fun DashboardScreen(
     val statsState by viewModel.dashboardStats.collectAsStateWithLifecycle()
     val recentState by viewModel.recentNotifications.collectAsStateWithLifecycle()
     val isServiceRunning by viewModel.isServiceRunning.collectAsStateWithLifecycle()
+    val activeProvider   by viewModel.activeProvider.collectAsStateWithLifecycle()
+    val lastConfidence   by viewModel.lastConfidence.collectAsStateWithLifecycle()
+    val cascadeCount     by viewModel.cascadeCount.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -148,6 +156,15 @@ fun DashboardScreen(
                         modifier = Modifier.padding(16.dp),
                     )
                 }
+            }
+
+            // ── AI Status Row ─────────────────────────────────────────────
+            item {
+                AIStatusRow(
+                    provider = activeProvider,
+                    confidence = lastConfidence,
+                    cascades = cascadeCount,
+                )
             }
 
             // ── Recent header ─────────────────────────────────────────────
@@ -265,6 +282,68 @@ private fun StatsGrid(stats: DashboardStats) {
             )
         }
         Spacer(Modifier.height(4.dp))
+    }
+}
+@Composable
+private fun AIStatusRow(
+    provider: String,
+    confidence: Float,
+    cascades: Int,
+) {
+    val chipColor = when (provider.lowercase()) {
+        "groq"       -> DeliveryGreen
+        "openrouter" -> OtpBlue
+        "gemini"     -> PromotionalOrange
+        else         -> Color.Gray
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        // Provider chip
+        AssistChip(
+            onClick = {},
+            label = { Text(provider, fontWeight = FontWeight.SemiBold) },
+            colors = AssistChipDefaults.assistChipColors(
+                containerColor = chipColor.copy(alpha = 0.15f),
+                labelColor = chipColor,
+            ),
+        )
+
+        // Confidence bar + label
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "${(confidence * 100).roundToInt()}% confident",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            )
+            Spacer(Modifier.height(4.dp))
+            LinearProgressIndicator(
+                progress = { confidence },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp)),
+                color = chipColor,
+                trackColor = chipColor.copy(alpha = 0.15f),
+            )
+        }
+
+        // Cascade count
+        if (cascades > 0) {
+            Text(
+                text = "↻ $cascades",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            )
+        }
     }
 }
 

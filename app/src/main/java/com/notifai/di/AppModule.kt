@@ -47,10 +47,4 @@ object AppModule {
     fun provideNotificationRepository(
         dao: NotificationDao,
     ): NotificationRepository = NotificationRepository(dao)
-
-    @Provides
-    @Singleton
-    fun provideApplicationContext(
-        @ApplicationContext context: Context,
-    ): Context = context
 }

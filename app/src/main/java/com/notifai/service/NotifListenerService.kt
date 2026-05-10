@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.notifai.MainActivity
 import com.notifai.ai.AIProviderManager
+import com.notifai.ai.BlockingEngine
 import com.notifai.data.model.Category
 import com.notifai.data.model.NotificationEntity
 import com.notifai.data.repository.NotificationRepository
@@ -43,6 +44,7 @@ class NotifListenerService : NotificationListenerService() {
 
     @Inject lateinit var repository: NotificationRepository
     @Inject lateinit var aiProviderManager: AIProviderManager
+    @Inject lateinit var blockingEngine: BlockingEngine
 
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
@@ -95,6 +97,7 @@ class NotifListenerService : NotificationListenerService() {
                 title = title,
                 body = text,
                 timestamp = sbn.postTime,
+                sbnKey = sbn.key,
             )
         )
     }
@@ -131,6 +134,13 @@ class NotifListenerService : NotificationListenerService() {
                     body = raw.body,
                 )
 
+                // Use the BlockingEngine (user prefs + confidence) instead of
+                // blindly trusting the AI's shouldBlock flag.
+                val shouldBlock = blockingEngine.shouldBlock(
+                    response.category,
+                    response.confidence,
+                )
+
                 val entity = NotificationEntity(
                     packageName = raw.packageName,
                     appName = raw.appName,
@@ -142,11 +152,21 @@ class NotifListenerService : NotificationListenerService() {
                     confidence = response.confidence,
                     reason = response.reason,
                     timestamp = raw.timestamp,
-                    isBlocked = response.shouldBlock,
+                    isBlocked = shouldBlock,
                     aiProvider = aiProviderManager.activeProvider.value,
                 )
 
                 repository.saveNotification(entity)
+
+                // Cancel the notification if AI says it should be blocked
+                if (entity.isBlocked) {
+                    try {
+                        cancelNotification(raw.sbnKey)
+                        Log.d(TAG, "Blocked & cancelled notification from ${raw.packageName}")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to cancel notification ${raw.sbnKey}", e)
+                    }
+                }
             }.onFailure { e ->
                 Log.e(TAG, "Failed to classify notification from ${raw.packageName}", e)
             }
@@ -196,6 +216,7 @@ class NotifListenerService : NotificationListenerService() {
         val title: String,
         val body: String,
         val timestamp: Long,
+        val sbnKey: String,   // StatusBarNotification.key — needed to cancel
     )
 
     companion object {

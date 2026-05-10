@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName
  *   "category":    "OTP",
  *   "confidence":  0.97,
  *   "reason":      "Contains a 6-digit one-time password.",
- *   "should_block": false
+ *   "shouldBlock": false
  * }
  * ```
  */
@@ -26,6 +26,6 @@ data class AIResponse(
     @SerializedName("reason")
     val reason: String,
 
-    @SerializedName("should_block")
+    @SerializedName(value = "shouldBlock", alternate = ["should_block"])
     val shouldBlock: Boolean,
 )

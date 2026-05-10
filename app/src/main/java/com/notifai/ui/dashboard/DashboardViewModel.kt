@@ -1,11 +1,11 @@
 package com.notifai.ui.dashboard
 
-import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.notifai.ai.AIProviderManager
 import com.notifai.data.model.DashboardStats
 import com.notifai.data.model.NotificationEntity
 import com.notifai.data.repository.NotificationRepository
@@ -25,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val repository: NotificationRepository,
+    private val aiProviderManager: AIProviderManager,
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
@@ -64,6 +65,12 @@ class DashboardViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = 0,
             )
+
+    // ── AI Provider status (from AIProviderManager) ───────────────────────────
+
+    val activeProvider: StateFlow<String> = aiProviderManager.activeProvider
+    val lastConfidence: StateFlow<Float> = aiProviderManager.lastConfidence
+    val cascadeCount: StateFlow<Int> = aiProviderManager.cascadeCount
 
     // ── Service running status ────────────────────────────────────────────────
 

@@ -1,6 +1,7 @@
 package com.notifai.service;
 
 import com.notifai.ai.AIProviderManager;
+import com.notifai.ai.BlockingEngine;
 import com.notifai.data.repository.NotificationRepository;
 import dagger.MembersInjector;
 import dagger.internal.DaggerGenerated;
@@ -28,22 +29,28 @@ public final class NotifListenerService_MembersInjector implements MembersInject
 
   private final Provider<AIProviderManager> aiProviderManagerProvider;
 
+  private final Provider<BlockingEngine> blockingEngineProvider;
+
   public NotifListenerService_MembersInjector(Provider<NotificationRepository> repositoryProvider,
-      Provider<AIProviderManager> aiProviderManagerProvider) {
+      Provider<AIProviderManager> aiProviderManagerProvider,
+      Provider<BlockingEngine> blockingEngineProvider) {
     this.repositoryProvider = repositoryProvider;
     this.aiProviderManagerProvider = aiProviderManagerProvider;
+    this.blockingEngineProvider = blockingEngineProvider;
   }
 
   public static MembersInjector<NotifListenerService> create(
       Provider<NotificationRepository> repositoryProvider,
-      Provider<AIProviderManager> aiProviderManagerProvider) {
-    return new NotifListenerService_MembersInjector(repositoryProvider, aiProviderManagerProvider);
+      Provider<AIProviderManager> aiProviderManagerProvider,
+      Provider<BlockingEngine> blockingEngineProvider) {
+    return new NotifListenerService_MembersInjector(repositoryProvider, aiProviderManagerProvider, blockingEngineProvider);
   }
 
   @Override
   public void injectMembers(NotifListenerService instance) {
     injectRepository(instance, repositoryProvider.get());
     injectAiProviderManager(instance, aiProviderManagerProvider.get());
+    injectBlockingEngine(instance, blockingEngineProvider.get());
   }
 
   @InjectedFieldSignature("com.notifai.service.NotifListenerService.repository")
@@ -56,5 +63,11 @@ public final class NotifListenerService_MembersInjector implements MembersInject
   public static void injectAiProviderManager(NotifListenerService instance,
       AIProviderManager aiProviderManager) {
     instance.aiProviderManager = aiProviderManager;
+  }
+
+  @InjectedFieldSignature("com.notifai.service.NotifListenerService.blockingEngine")
+  public static void injectBlockingEngine(NotifListenerService instance,
+      BlockingEngine blockingEngine) {
+    instance.blockingEngine = blockingEngine;
   }
 }

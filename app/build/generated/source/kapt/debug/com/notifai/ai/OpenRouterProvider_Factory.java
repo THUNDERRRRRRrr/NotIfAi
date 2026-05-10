@@ -26,25 +26,30 @@ import javax.inject.Provider;
 public final class OpenRouterProvider_Factory implements Factory<OpenRouterProvider> {
   private final Provider<OpenRouterService> openRouterServiceProvider;
 
+  private final Provider<ApiKeyManager> apiKeyManagerProvider;
+
   private final Provider<Gson> gsonProvider;
 
   public OpenRouterProvider_Factory(Provider<OpenRouterService> openRouterServiceProvider,
-      Provider<Gson> gsonProvider) {
+      Provider<ApiKeyManager> apiKeyManagerProvider, Provider<Gson> gsonProvider) {
     this.openRouterServiceProvider = openRouterServiceProvider;
+    this.apiKeyManagerProvider = apiKeyManagerProvider;
     this.gsonProvider = gsonProvider;
   }
 
   @Override
   public OpenRouterProvider get() {
-    return newInstance(openRouterServiceProvider.get(), gsonProvider.get());
+    return newInstance(openRouterServiceProvider.get(), apiKeyManagerProvider.get(), gsonProvider.get());
   }
 
   public static OpenRouterProvider_Factory create(
-      Provider<OpenRouterService> openRouterServiceProvider, Provider<Gson> gsonProvider) {
-    return new OpenRouterProvider_Factory(openRouterServiceProvider, gsonProvider);
+      Provider<OpenRouterService> openRouterServiceProvider,
+      Provider<ApiKeyManager> apiKeyManagerProvider, Provider<Gson> gsonProvider) {
+    return new OpenRouterProvider_Factory(openRouterServiceProvider, apiKeyManagerProvider, gsonProvider);
   }
 
-  public static OpenRouterProvider newInstance(OpenRouterService openRouterService, Gson gson) {
-    return new OpenRouterProvider(openRouterService, gson);
+  public static OpenRouterProvider newInstance(OpenRouterService openRouterService,
+      ApiKeyManager apiKeyManager, Gson gson) {
+    return new OpenRouterProvider(openRouterService, apiKeyManager, gson);
   }
 }

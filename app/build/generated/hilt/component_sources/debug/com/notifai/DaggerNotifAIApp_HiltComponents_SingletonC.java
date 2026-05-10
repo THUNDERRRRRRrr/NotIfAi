@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.Gson;
 import com.notifai.ai.AIProviderManager;
+import com.notifai.ai.ApiKeyManager;
+import com.notifai.ai.BlockingEngine;
 import com.notifai.ai.GeminiProvider;
 import com.notifai.ai.GeminiService;
 import com.notifai.ai.GroqProvider;
@@ -18,20 +20,16 @@ import com.notifai.ai.OpenRouterService;
 import com.notifai.data.db.NotificationDao;
 import com.notifai.data.db.NotificationDatabase;
 import com.notifai.data.repository.NotificationRepository;
-import com.notifai.di.AIModule_ProvideGeminiOkHttpClientFactory;
-import com.notifai.di.AIModule_ProvideGeminiRetrofitFactory;
-import com.notifai.di.AIModule_ProvideGeminiServiceFactory;
-import com.notifai.di.AIModule_ProvideGroqOkHttpClientFactory;
-import com.notifai.di.AIModule_ProvideGroqRetrofitFactory;
-import com.notifai.di.AIModule_ProvideGroqServiceFactory;
-import com.notifai.di.AIModule_ProvideGsonFactory;
-import com.notifai.di.AIModule_ProvideOpenRouterOkHttpClientFactory;
-import com.notifai.di.AIModule_ProvideOpenRouterRetrofitFactory;
-import com.notifai.di.AIModule_ProvideOpenRouterServiceFactory;
 import com.notifai.di.AppModule_ProvideNotificationDaoFactory;
 import com.notifai.di.AppModule_ProvideNotificationDatabaseFactory;
 import com.notifai.di.AppModule_ProvideNotificationRepositoryFactory;
-import com.notifai.security.ApiKeyManager;
+import com.notifai.di.NetworkModule_ProvideGeminiOkHttpFactory;
+import com.notifai.di.NetworkModule_ProvideGeminiServiceFactory;
+import com.notifai.di.NetworkModule_ProvideGroqOkHttpFactory;
+import com.notifai.di.NetworkModule_ProvideGroqServiceFactory;
+import com.notifai.di.NetworkModule_ProvideGsonFactory;
+import com.notifai.di.NetworkModule_ProvideOpenRouterOkHttpFactory;
+import com.notifai.di.NetworkModule_ProvideOpenRouterServiceFactory;
 import com.notifai.service.NotifListenerService;
 import com.notifai.service.NotifListenerService_MembersInjector;
 import com.notifai.ui.apps.AppSettingsViewModel;
@@ -72,7 +70,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
 import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
 
 @DaggerGenerated
 @Generated(
@@ -427,15 +424,21 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
+      static String com_notifai_ui_blocked_BlockedViewModel = "com.notifai.ui.blocked.BlockedViewModel";
+
+      static String com_notifai_ui_settings_SettingsViewModel = "com.notifai.ui.settings.SettingsViewModel";
+
       static String com_notifai_ui_apps_AppSettingsViewModel = "com.notifai.ui.apps.AppSettingsViewModel";
 
       static String com_notifai_ui_onboarding_OnboardingViewModel = "com.notifai.ui.onboarding.OnboardingViewModel";
 
-      static String com_notifai_ui_blocked_BlockedViewModel = "com.notifai.ui.blocked.BlockedViewModel";
-
       static String com_notifai_ui_dashboard_DashboardViewModel = "com.notifai.ui.dashboard.DashboardViewModel";
 
-      static String com_notifai_ui_settings_SettingsViewModel = "com.notifai.ui.settings.SettingsViewModel";
+      @KeepFieldType
+      BlockedViewModel com_notifai_ui_blocked_BlockedViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_notifai_ui_settings_SettingsViewModel2;
 
       @KeepFieldType
       AppSettingsViewModel com_notifai_ui_apps_AppSettingsViewModel2;
@@ -444,13 +447,7 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
       OnboardingViewModel com_notifai_ui_onboarding_OnboardingViewModel2;
 
       @KeepFieldType
-      BlockedViewModel com_notifai_ui_blocked_BlockedViewModel2;
-
-      @KeepFieldType
       DashboardViewModel com_notifai_ui_dashboard_DashboardViewModel2;
-
-      @KeepFieldType
-      SettingsViewModel com_notifai_ui_settings_SettingsViewModel2;
     }
   }
 
@@ -503,30 +500,30 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_notifai_ui_onboarding_OnboardingViewModel = "com.notifai.ui.onboarding.OnboardingViewModel";
-
-      static String com_notifai_ui_settings_SettingsViewModel = "com.notifai.ui.settings.SettingsViewModel";
+      static String com_notifai_ui_apps_AppSettingsViewModel = "com.notifai.ui.apps.AppSettingsViewModel";
 
       static String com_notifai_ui_dashboard_DashboardViewModel = "com.notifai.ui.dashboard.DashboardViewModel";
 
+      static String com_notifai_ui_onboarding_OnboardingViewModel = "com.notifai.ui.onboarding.OnboardingViewModel";
+
       static String com_notifai_ui_blocked_BlockedViewModel = "com.notifai.ui.blocked.BlockedViewModel";
 
-      static String com_notifai_ui_apps_AppSettingsViewModel = "com.notifai.ui.apps.AppSettingsViewModel";
+      static String com_notifai_ui_settings_SettingsViewModel = "com.notifai.ui.settings.SettingsViewModel";
 
       @KeepFieldType
-      OnboardingViewModel com_notifai_ui_onboarding_OnboardingViewModel2;
-
-      @KeepFieldType
-      SettingsViewModel com_notifai_ui_settings_SettingsViewModel2;
+      AppSettingsViewModel com_notifai_ui_apps_AppSettingsViewModel2;
 
       @KeepFieldType
       DashboardViewModel com_notifai_ui_dashboard_DashboardViewModel2;
 
       @KeepFieldType
+      OnboardingViewModel com_notifai_ui_onboarding_OnboardingViewModel2;
+
+      @KeepFieldType
       BlockedViewModel com_notifai_ui_blocked_BlockedViewModel2;
 
       @KeepFieldType
-      AppSettingsViewModel com_notifai_ui_apps_AppSettingsViewModel2;
+      SettingsViewModel com_notifai_ui_settings_SettingsViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -557,7 +554,7 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
           return (T) new BlockedViewModel(singletonCImpl.provideNotificationRepositoryProvider.get());
 
           case 2: // com.notifai.ui.dashboard.DashboardViewModel 
-          return (T) new DashboardViewModel(singletonCImpl.provideNotificationRepositoryProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+          return (T) new DashboardViewModel(singletonCImpl.provideNotificationRepositoryProvider.get(), singletonCImpl.aIProviderManagerProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           case 3: // com.notifai.ui.onboarding.OnboardingViewModel 
           return (T) new OnboardingViewModel(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
@@ -648,6 +645,7 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
     private NotifListenerService injectNotifListenerService2(NotifListenerService instance) {
       NotifListenerService_MembersInjector.injectRepository(instance, singletonCImpl.provideNotificationRepositoryProvider.get());
       NotifListenerService_MembersInjector.injectAiProviderManager(instance, singletonCImpl.aIProviderManagerProvider.get());
+      NotifListenerService_MembersInjector.injectBlockingEngine(instance, singletonCImpl.blockingEngineProvider.get());
       return instance;
     }
   }
@@ -665,35 +663,29 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
 
     private Provider<ApiKeyManager> apiKeyManagerProvider;
 
-    private Provider<com.notifai.ai.ApiKeyManager> apiKeyManagerProvider2;
-
-    private Provider<OkHttpClient> provideGroqOkHttpClientProvider;
+    private Provider<OkHttpClient> provideGroqOkHttpProvider;
 
     private Provider<Gson> provideGsonProvider;
-
-    private Provider<Retrofit> provideGroqRetrofitProvider;
 
     private Provider<GroqService> provideGroqServiceProvider;
 
     private Provider<GroqProvider> groqProvider;
 
-    private Provider<OkHttpClient> provideOpenRouterOkHttpClientProvider;
-
-    private Provider<Retrofit> provideOpenRouterRetrofitProvider;
+    private Provider<OkHttpClient> provideOpenRouterOkHttpProvider;
 
     private Provider<OpenRouterService> provideOpenRouterServiceProvider;
 
     private Provider<OpenRouterProvider> openRouterProvider;
 
-    private Provider<OkHttpClient> provideGeminiOkHttpClientProvider;
-
-    private Provider<Retrofit> provideGeminiRetrofitProvider;
+    private Provider<OkHttpClient> provideGeminiOkHttpProvider;
 
     private Provider<GeminiService> provideGeminiServiceProvider;
 
     private Provider<GeminiProvider> geminiProvider;
 
     private Provider<AIProviderManager> aIProviderManagerProvider;
+
+    private Provider<BlockingEngine> blockingEngineProvider;
 
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
@@ -706,22 +698,19 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
       this.provideNotificationDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<NotificationDatabase>(singletonCImpl, 2));
       this.provideNotificationDaoProvider = DoubleCheck.provider(new SwitchingProvider<NotificationDao>(singletonCImpl, 1));
       this.provideNotificationRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<NotificationRepository>(singletonCImpl, 0));
-      this.apiKeyManagerProvider = DoubleCheck.provider(new SwitchingProvider<ApiKeyManager>(singletonCImpl, 3));
-      this.apiKeyManagerProvider2 = DoubleCheck.provider(new SwitchingProvider<com.notifai.ai.ApiKeyManager>(singletonCImpl, 9));
-      this.provideGroqOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 8));
-      this.provideGsonProvider = DoubleCheck.provider(new SwitchingProvider<Gson>(singletonCImpl, 10));
-      this.provideGroqRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonCImpl, 7));
-      this.provideGroqServiceProvider = DoubleCheck.provider(new SwitchingProvider<GroqService>(singletonCImpl, 6));
-      this.groqProvider = DoubleCheck.provider(new SwitchingProvider<GroqProvider>(singletonCImpl, 5));
-      this.provideOpenRouterOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 14));
-      this.provideOpenRouterRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonCImpl, 13));
-      this.provideOpenRouterServiceProvider = DoubleCheck.provider(new SwitchingProvider<OpenRouterService>(singletonCImpl, 12));
-      this.openRouterProvider = DoubleCheck.provider(new SwitchingProvider<OpenRouterProvider>(singletonCImpl, 11));
-      this.provideGeminiOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 18));
-      this.provideGeminiRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonCImpl, 17));
-      this.provideGeminiServiceProvider = DoubleCheck.provider(new SwitchingProvider<GeminiService>(singletonCImpl, 16));
-      this.geminiProvider = DoubleCheck.provider(new SwitchingProvider<GeminiProvider>(singletonCImpl, 15));
-      this.aIProviderManagerProvider = DoubleCheck.provider(new SwitchingProvider<AIProviderManager>(singletonCImpl, 4));
+      this.apiKeyManagerProvider = DoubleCheck.provider(new SwitchingProvider<ApiKeyManager>(singletonCImpl, 7));
+      this.provideGroqOkHttpProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 6));
+      this.provideGsonProvider = DoubleCheck.provider(new SwitchingProvider<Gson>(singletonCImpl, 8));
+      this.provideGroqServiceProvider = DoubleCheck.provider(new SwitchingProvider<GroqService>(singletonCImpl, 5));
+      this.groqProvider = DoubleCheck.provider(new SwitchingProvider<GroqProvider>(singletonCImpl, 4));
+      this.provideOpenRouterOkHttpProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 11));
+      this.provideOpenRouterServiceProvider = DoubleCheck.provider(new SwitchingProvider<OpenRouterService>(singletonCImpl, 10));
+      this.openRouterProvider = DoubleCheck.provider(new SwitchingProvider<OpenRouterProvider>(singletonCImpl, 9));
+      this.provideGeminiOkHttpProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 14));
+      this.provideGeminiServiceProvider = DoubleCheck.provider(new SwitchingProvider<GeminiService>(singletonCImpl, 13));
+      this.geminiProvider = DoubleCheck.provider(new SwitchingProvider<GeminiProvider>(singletonCImpl, 12));
+      this.aIProviderManagerProvider = DoubleCheck.provider(new SwitchingProvider<AIProviderManager>(singletonCImpl, 3));
+      this.blockingEngineProvider = DoubleCheck.provider(new SwitchingProvider<BlockingEngine>(singletonCImpl, 15));
     }
 
     @Override
@@ -766,53 +755,44 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
           case 2: // com.notifai.data.db.NotificationDatabase 
           return (T) AppModule_ProvideNotificationDatabaseFactory.provideNotificationDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 3: // com.notifai.security.ApiKeyManager 
-          return (T) new ApiKeyManager();
+          case 3: // com.notifai.ai.AIProviderManager 
+          return (T) new AIProviderManager(singletonCImpl.groqProvider.get(), singletonCImpl.openRouterProvider.get(), singletonCImpl.geminiProvider.get(), singletonCImpl.apiKeyManagerProvider.get());
 
-          case 4: // com.notifai.ai.AIProviderManager 
-          return (T) new AIProviderManager(singletonCImpl.groqProvider.get(), singletonCImpl.openRouterProvider.get(), singletonCImpl.geminiProvider.get());
+          case 4: // com.notifai.ai.GroqProvider 
+          return (T) new GroqProvider(singletonCImpl.provideGroqServiceProvider.get(), singletonCImpl.apiKeyManagerProvider.get(), singletonCImpl.provideGsonProvider.get());
 
-          case 5: // com.notifai.ai.GroqProvider 
-          return (T) new GroqProvider(singletonCImpl.provideGroqServiceProvider.get(), singletonCImpl.provideGsonProvider.get());
+          case 5: // com.notifai.ai.GroqService 
+          return (T) NetworkModule_ProvideGroqServiceFactory.provideGroqService(singletonCImpl.provideGroqOkHttpProvider.get(), singletonCImpl.provideGsonProvider.get());
 
-          case 6: // com.notifai.ai.GroqService 
-          return (T) AIModule_ProvideGroqServiceFactory.provideGroqService(singletonCImpl.provideGroqRetrofitProvider.get());
+          case 6: // @javax.inject.Named("groq") okhttp3.OkHttpClient 
+          return (T) NetworkModule_ProvideGroqOkHttpFactory.provideGroqOkHttp(singletonCImpl.apiKeyManagerProvider.get());
 
-          case 7: // @com.notifai.di.GroqRetrofit retrofit2.Retrofit 
-          return (T) AIModule_ProvideGroqRetrofitFactory.provideGroqRetrofit(singletonCImpl.provideGroqOkHttpClientProvider.get(), singletonCImpl.provideGsonProvider.get());
+          case 7: // com.notifai.ai.ApiKeyManager 
+          return (T) new ApiKeyManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 8: // @com.notifai.di.GroqRetrofit okhttp3.OkHttpClient 
-          return (T) AIModule_ProvideGroqOkHttpClientFactory.provideGroqOkHttpClient(singletonCImpl.apiKeyManagerProvider2.get());
+          case 8: // com.google.gson.Gson 
+          return (T) NetworkModule_ProvideGsonFactory.provideGson();
 
-          case 9: // com.notifai.ai.ApiKeyManager 
-          return (T) new com.notifai.ai.ApiKeyManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+          case 9: // com.notifai.ai.OpenRouterProvider 
+          return (T) new OpenRouterProvider(singletonCImpl.provideOpenRouterServiceProvider.get(), singletonCImpl.apiKeyManagerProvider.get(), singletonCImpl.provideGsonProvider.get());
 
-          case 10: // com.google.gson.Gson 
-          return (T) AIModule_ProvideGsonFactory.provideGson();
+          case 10: // com.notifai.ai.OpenRouterService 
+          return (T) NetworkModule_ProvideOpenRouterServiceFactory.provideOpenRouterService(singletonCImpl.provideOpenRouterOkHttpProvider.get(), singletonCImpl.provideGsonProvider.get());
 
-          case 11: // com.notifai.ai.OpenRouterProvider 
-          return (T) new OpenRouterProvider(singletonCImpl.provideOpenRouterServiceProvider.get(), singletonCImpl.provideGsonProvider.get());
+          case 11: // @javax.inject.Named("openrouter") okhttp3.OkHttpClient 
+          return (T) NetworkModule_ProvideOpenRouterOkHttpFactory.provideOpenRouterOkHttp(singletonCImpl.apiKeyManagerProvider.get());
 
-          case 12: // com.notifai.ai.OpenRouterService 
-          return (T) AIModule_ProvideOpenRouterServiceFactory.provideOpenRouterService(singletonCImpl.provideOpenRouterRetrofitProvider.get());
+          case 12: // com.notifai.ai.GeminiProvider 
+          return (T) new GeminiProvider(singletonCImpl.provideGeminiServiceProvider.get(), singletonCImpl.apiKeyManagerProvider.get(), singletonCImpl.provideGsonProvider.get());
 
-          case 13: // @com.notifai.di.OpenRouterRetrofit retrofit2.Retrofit 
-          return (T) AIModule_ProvideOpenRouterRetrofitFactory.provideOpenRouterRetrofit(singletonCImpl.provideOpenRouterOkHttpClientProvider.get(), singletonCImpl.provideGsonProvider.get());
+          case 13: // com.notifai.ai.GeminiService 
+          return (T) NetworkModule_ProvideGeminiServiceFactory.provideGeminiService(singletonCImpl.provideGeminiOkHttpProvider.get(), singletonCImpl.provideGsonProvider.get());
 
-          case 14: // @com.notifai.di.OpenRouterRetrofit okhttp3.OkHttpClient 
-          return (T) AIModule_ProvideOpenRouterOkHttpClientFactory.provideOpenRouterOkHttpClient(singletonCImpl.apiKeyManagerProvider2.get());
+          case 14: // @javax.inject.Named("gemini") okhttp3.OkHttpClient 
+          return (T) NetworkModule_ProvideGeminiOkHttpFactory.provideGeminiOkHttp();
 
-          case 15: // com.notifai.ai.GeminiProvider 
-          return (T) new GeminiProvider(singletonCImpl.provideGeminiServiceProvider.get(), singletonCImpl.apiKeyManagerProvider2.get(), singletonCImpl.provideGsonProvider.get());
-
-          case 16: // com.notifai.ai.GeminiService 
-          return (T) AIModule_ProvideGeminiServiceFactory.provideGeminiService(singletonCImpl.provideGeminiRetrofitProvider.get());
-
-          case 17: // @com.notifai.di.GeminiRetrofit retrofit2.Retrofit 
-          return (T) AIModule_ProvideGeminiRetrofitFactory.provideGeminiRetrofit(singletonCImpl.provideGeminiOkHttpClientProvider.get(), singletonCImpl.provideGsonProvider.get());
-
-          case 18: // @com.notifai.di.GeminiRetrofit okhttp3.OkHttpClient 
-          return (T) AIModule_ProvideGeminiOkHttpClientFactory.provideGeminiOkHttpClient();
+          case 15: // com.notifai.ai.BlockingEngine 
+          return (T) new BlockingEngine(singletonCImpl.apiKeyManagerProvider.get());
 
           default: throw new AssertionError(id);
         }

@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
  *  "category":    "OTP",
  *  "confidence":  0.97,
  *  "reason":      "Contains a 6-digit one-time password.",
- *  "should_block": false
+ *  "shouldBlock": false
  * }
  * ```
  */
@@ -26,7 +26,7 @@ public final class AIResponse {
     @com.google.gson.annotations.SerializedName(value = "reason")
     @org.jetbrains.annotations.NotNull()
     private final java.lang.String reason = null;
-    @com.google.gson.annotations.SerializedName(value = "should_block")
+    @com.google.gson.annotations.SerializedName(value = "shouldBlock", alternate = {"should_block"})
     private final boolean shouldBlock = false;
     
     public AIResponse(@org.jetbrains.annotations.NotNull()

@@ -26,25 +26,29 @@ import javax.inject.Provider;
 public final class GroqProvider_Factory implements Factory<GroqProvider> {
   private final Provider<GroqService> groqServiceProvider;
 
+  private final Provider<ApiKeyManager> apiKeyManagerProvider;
+
   private final Provider<Gson> gsonProvider;
 
   public GroqProvider_Factory(Provider<GroqService> groqServiceProvider,
-      Provider<Gson> gsonProvider) {
+      Provider<ApiKeyManager> apiKeyManagerProvider, Provider<Gson> gsonProvider) {
     this.groqServiceProvider = groqServiceProvider;
+    this.apiKeyManagerProvider = apiKeyManagerProvider;
     this.gsonProvider = gsonProvider;
   }
 
   @Override
   public GroqProvider get() {
-    return newInstance(groqServiceProvider.get(), gsonProvider.get());
+    return newInstance(groqServiceProvider.get(), apiKeyManagerProvider.get(), gsonProvider.get());
   }
 
   public static GroqProvider_Factory create(Provider<GroqService> groqServiceProvider,
-      Provider<Gson> gsonProvider) {
-    return new GroqProvider_Factory(groqServiceProvider, gsonProvider);
+      Provider<ApiKeyManager> apiKeyManagerProvider, Provider<Gson> gsonProvider) {
+    return new GroqProvider_Factory(groqServiceProvider, apiKeyManagerProvider, gsonProvider);
   }
 
-  public static GroqProvider newInstance(GroqService groqService, Gson gson) {
-    return new GroqProvider(groqService, gson);
+  public static GroqProvider newInstance(GroqService groqService, ApiKeyManager apiKeyManager,
+      Gson gson) {
+    return new GroqProvider(groqService, apiKeyManager, gson);
   }
 }

@@ -2,7 +2,9 @@ package com.notifai.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.notifai.security.ApiKeyManager
+import com.notifai.ai.ApiKeyManager
+import com.notifai.data.model.AIModelPreferences
+import com.notifai.data.model.BlockingPreferences
 import com.notifai.ui.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,73 +18,128 @@ class SettingsViewModel @Inject constructor(
     private val apiKeyManager: ApiKeyManager,
 ) : ViewModel() {
 
-    // ── API key state (masked for display) ────────────────────────────────────
+    // ── API key display (masked) ───────────────────────────────────────────────
 
-    private val _groqKey = MutableStateFlow(apiKeyManager.getGroqKey().masked())
+    private val _groqKey = MutableStateFlow(apiKeyManager.getGroqKey().orEmpty().masked())
     val groqKey: StateFlow<String> = _groqKey.asStateFlow()
 
-    private val _openRouterKey = MutableStateFlow(apiKeyManager.getOpenRouterKey().masked())
+    private val _openRouterKey = MutableStateFlow(apiKeyManager.getOpenRouterKey().orEmpty().masked())
     val openRouterKey: StateFlow<String> = _openRouterKey.asStateFlow()
 
-    private val _geminiKey = MutableStateFlow(apiKeyManager.getGeminiKey().masked())
+    private val _geminiKey = MutableStateFlow(apiKeyManager.getGeminiKey().orEmpty().masked())
     val geminiKey: StateFlow<String> = _geminiKey.asStateFlow()
-
-    // ── Active provider ───────────────────────────────────────────────────────
-
-    private val _activeProvider = MutableStateFlow(apiKeyManager.getActiveProvider())
-    val activeProvider: StateFlow<String> = _activeProvider.asStateFlow()
 
     // ── Sensitivity ───────────────────────────────────────────────────────────
 
     private val _sensitivityLevel = MutableStateFlow(SensitivityLevel.DEFAULT)
     val sensitivityLevel: StateFlow<SensitivityLevel> = _sensitivityLevel.asStateFlow()
 
-    // ── Save state (for showing spinners / error toasts) ──────────────────────
+    // ── Per-key save states ───────────────────────────────────────────────────
 
-    private val _saveState = MutableStateFlow<UiState<Unit>>(UiState.Success(Unit))
-    val saveState: StateFlow<UiState<Unit>> = _saveState.asStateFlow()
+    private val _groqSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
+    val groqSaveState: StateFlow<UiState<String>> = _groqSaveState.asStateFlow()
 
-    // ── Actions ───────────────────────────────────────────────────────────────
+    private val _openRouterSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
+    val openRouterSaveState: StateFlow<UiState<String>> = _openRouterSaveState.asStateFlow()
 
-    fun saveGroqKey(key: String) = saveKey(key) {
+    private val _geminiSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
+    val geminiSaveState: StateFlow<UiState<String>> = _geminiSaveState.asStateFlow()
+
+    // ── Blocking Preferences ──────────────────────────────────────────────────
+
+    private val _blockingPreferences = MutableStateFlow(apiKeyManager.getBlockingPreferences())
+    val blockingPreferences: StateFlow<BlockingPreferences> = _blockingPreferences.asStateFlow()
+
+    // ── AI Model Preferences (cascading + model selection) ────────────────────
+
+    private val _aiModelPreferences = MutableStateFlow(apiKeyManager.getAIModelPreferences())
+    val aiModelPreferences: StateFlow<AIModelPreferences> = _aiModelPreferences.asStateFlow()
+
+    // ── API Key Actions ───────────────────────────────────────────────────────
+
+    fun saveGroqKey(key: String) = saveKey(key, _groqSaveState) {
         apiKeyManager.saveGroqKey(key)
         _groqKey.value = key.masked()
     }
 
-    fun saveOpenRouterKey(key: String) = saveKey(key) {
+    fun saveOpenRouterKey(key: String) = saveKey(key, _openRouterSaveState) {
         apiKeyManager.saveOpenRouterKey(key)
         _openRouterKey.value = key.masked()
     }
 
-    fun saveGeminiKey(key: String) = saveKey(key) {
+    fun saveGeminiKey(key: String) = saveKey(key, _geminiSaveState) {
         apiKeyManager.saveGeminiKey(key)
         _geminiKey.value = key.masked()
     }
 
     fun setSensitivity(level: SensitivityLevel) {
         _sensitivityLevel.value = level
-        // TODO: persist via ApiKeyManager / SharedPreferences when the real
-        //       ApiKeyManager is implemented.
+    }
+
+    // ── Blocking Preferences Actions ──────────────────────────────────────────
+
+    fun updateBlockingPreference(category: String, block: Boolean) {
+        val current = _blockingPreferences.value
+        val updated = when (category.uppercase()) {
+            "SPAM"        -> current.copy(blockSpam = block)
+            "PHISHING"    -> current.copy(blockPhishing = block)
+            "PROMOTIONAL" -> current.copy(blockPromotional = block)
+            "UNKNOWN"     -> current.copy(blockUnknown = block)
+            "DELIVERY"    -> current.copy(blockDelivery = block)
+            "OTP"         -> current.copy(blockOtp = block)
+            else          -> current
+        }
+        _blockingPreferences.value = updated
+        apiKeyManager.saveBlockingPreferences(updated)
+    }
+
+    fun updateConfidenceThreshold(threshold: Float) {
+        val updated = _blockingPreferences.value.copy(minConfidenceThreshold = threshold)
+        _blockingPreferences.value = updated
+        apiKeyManager.saveBlockingPreferences(updated)
+    }
+
+    // ── AI Model Preferences Actions ──────────────────────────────────────────
+
+    fun toggleCascading(enabled: Boolean) {
+        updateAIModelPrefs { it.copy(enableCascading = enabled) }
+    }
+
+    fun updateCascadeThreshold(threshold: Float) {
+        updateAIModelPrefs { it.copy(confidenceThreshold = threshold) }
+    }
+
+    fun setGroqModel(model: String) {
+        updateAIModelPrefs { it.copy(groqModel = model) }
+    }
+
+    fun setOpenRouterModel(model: String) {
+        updateAIModelPrefs { it.copy(openRouterModel = model) }
+    }
+
+    private fun updateAIModelPrefs(transform: (AIModelPreferences) -> AIModelPreferences) {
+        val updated = transform(_aiModelPreferences.value)
+        _aiModelPreferences.value = updated
+        apiKeyManager.saveAIModelPreferences(updated)
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private fun saveKey(key: String, block: () -> Unit) {
+    private fun saveKey(
+        key: String,
+        stateFlow: MutableStateFlow<UiState<String>>,
+        block: () -> Unit,
+    ) {
         if (key.isBlank()) return
         viewModelScope.launch {
-            _saveState.value = UiState.Loading
+            stateFlow.value = UiState.Loading
             runCatching { block() }
-                .onSuccess { _saveState.value = UiState.Success(Unit) }
-                .onFailure { _saveState.value = UiState.Error("Failed to save key", it) }
+                .onSuccess { stateFlow.value = UiState.Success("saved") }
+                .onFailure { stateFlow.value = UiState.Error("Failed to save key: ${it.message}") }
         }
     }
 
     companion object {
-        /**
-         * Masks an API key for safe display.
-         * "sk-abc123foobar9999" → "sk-...9999"
-         * Keys shorter than 9 chars are fully masked.
-         */
         fun String.masked(): String = when {
             isBlank() -> ""
             length <= 8 -> "•".repeat(length)
