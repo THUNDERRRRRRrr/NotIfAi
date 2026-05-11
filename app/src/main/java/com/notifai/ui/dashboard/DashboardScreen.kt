@@ -3,7 +3,10 @@ package com.notifai.ui.dashboard
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Settings
@@ -84,6 +88,8 @@ fun DashboardScreen(
     val lastConfidence   by viewModel.lastConfidence.collectAsStateWithLifecycle()
     val cascadeCount     by viewModel.cascadeCount.collectAsStateWithLifecycle()
     val lastPingMs       by viewModel.lastPingMs.collectAsStateWithLifecycle()
+    val lastError        by viewModel.lastError.collectAsStateWithLifecycle()
+    val providerErrors   by viewModel.providerErrors.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -166,6 +172,8 @@ fun DashboardScreen(
                     confidence = lastConfidence,
                     cascades = cascadeCount,
                     pingMs = lastPingMs,
+                    errorMessage = lastError,
+                    providerErrors = providerErrors,
                 )
             }
 
@@ -292,6 +300,8 @@ private fun AIStatusRow(
     confidence: Float,
     cascades: Int,
     pingMs: Long,
+    errorMessage: String = "",
+    providerErrors: Map<String, String> = emptyMap(),
 ) {
     val chipColor = when (provider.lowercase()) {
         "groq"       -> DeliveryGreen
@@ -299,61 +309,110 @@ private fun AIStatusRow(
         "gemini"     -> PromotionalOrange
         else         -> Color.Gray
     }
+    val hasError = errorMessage.isNotBlank()
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+            .animateContentSize(),
     ) {
-        // Provider chip
-        AssistChip(
-            onClick = {},
-            label = { Text(provider, fontWeight = FontWeight.SemiBold) },
-            colors = AssistChipDefaults.assistChipColors(
-                containerColor = chipColor.copy(alpha = 0.15f),
-                labelColor = chipColor,
-            ),
-        )
-
-        // Confidence bar + label
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = "${(confidence * 100).roundToInt()}% confident",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            // Provider chip
+            AssistChip(
+                onClick = {},
+                label = { Text(provider, fontWeight = FontWeight.SemiBold) },
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = chipColor.copy(alpha = 0.15f),
+                    labelColor = chipColor,
+                ),
             )
-            Spacer(Modifier.height(4.dp))
-            LinearProgressIndicator(
-                progress = { confidence },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(6.dp)
-                    .clip(RoundedCornerShape(3.dp)),
-                color = chipColor,
-                trackColor = chipColor.copy(alpha = 0.15f),
-            )
-        }
 
-        // Metrics (Cascade and Ping)
-        Column(horizontalAlignment = Alignment.End) {
-            if (pingMs > 0) {
+            // Confidence bar + label
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "⏱️ ${pingMs}ms",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    text = "${(confidence * 100).roundToInt()}% confident",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                )
+                Spacer(Modifier.height(4.dp))
+                LinearProgressIndicator(
+                    progress = { confidence },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(3.dp)),
+                    color = chipColor,
+                    trackColor = chipColor.copy(alpha = 0.15f),
                 )
             }
-            if (cascades > 0) {
-                Text(
-                    text = "↻ $cascades",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                )
+
+            // Metrics (Cascade and Ping)
+            Column(horizontalAlignment = Alignment.End) {
+                if (pingMs > 0) {
+                    Text(
+                        text = "⏱\uFE0F ${pingMs}ms",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    )
+                }
+                if (cascades > 0) {
+                    Text(
+                        text = "↻ $cascades",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    )
+                }
+            }
+        }
+
+        // ── API Error Banner ──────────────────────────────────────────────
+        AnimatedVisibility(
+            visible = hasError,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(SpamRed.copy(alpha = 0.1f))
+                    .padding(12.dp),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.ErrorOutline,
+                        contentDescription = "API Error",
+                        tint = SpamRed,
+                        modifier = Modifier.size(20.dp),
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "API Error",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = SpamRed,
+                    )
+                }
+                Spacer(Modifier.height(6.dp))
+                providerErrors.forEach { (providerName, error) ->
+                    val truncated = if (error.length > 150) error.take(150) + "…" else error
+                    Text(
+                        text = "$providerName: $truncated",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                        modifier = Modifier.padding(top = 2.dp),
+                    )
+                }
             }
         }
     }

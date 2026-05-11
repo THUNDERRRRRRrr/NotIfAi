@@ -31,14 +31,16 @@ object NetworkModule {
     fun provideGroqOkHttp(apiKeyManager: ApiKeyManager): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor { chain ->
+                // Read key fresh on every request so it's never stale
+                val key = apiKeyManager.getGroqKey() ?: ""
                 val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer ${apiKeyManager.getGroqKey() ?: ""}")
+                    .addHeader("Authorization", "Bearer $key")
                     .addHeader("Content-Type", "application/json")
                     .build()
                 chain.proceed(request)
             }
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
             .build()
 
     @Provides @Singleton
@@ -46,15 +48,18 @@ object NetworkModule {
     fun provideOpenRouterOkHttp(apiKeyManager: ApiKeyManager): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor { chain ->
+                // Read key fresh on every request so it's never stale
+                val key = apiKeyManager.getOpenRouterKey() ?: ""
                 val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer ${apiKeyManager.getOpenRouterKey() ?: ""}")
+                    .addHeader("Authorization", "Bearer $key")
+                    .addHeader("Content-Type", "application/json")
                     .addHeader("HTTP-Referer", "com.notifai")
                     .addHeader("X-Title", "NotifAI")
                     .build()
                 chain.proceed(request)
             }
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
             .build()
 
     @Provides @Singleton
@@ -62,7 +67,7 @@ object NetworkModule {
     fun provideGeminiOkHttp(): OkHttpClient =
         OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
             .build()
 
     @Provides @Singleton
@@ -92,3 +97,4 @@ object NetworkModule {
             .build()
             .create(GeminiService::class.java)
 }
+

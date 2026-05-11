@@ -72,6 +72,8 @@ class DashboardViewModel @Inject constructor(
     val lastConfidence: StateFlow<Float> = aiProviderManager.lastConfidence
     val cascadeCount: StateFlow<Int> = aiProviderManager.cascadeCount
     val lastPingMs: StateFlow<Long> = aiProviderManager.lastPingMs
+    val lastError: StateFlow<String> = aiProviderManager.lastError
+    val providerErrors: StateFlow<Map<String, String>> = aiProviderManager.providerErrors
 
     // ── Service running status ────────────────────────────────────────────────
 

@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface GeminiService {
-    @POST("models/gemini-1.5-flash:generateContent")
+    @POST("models/gemini-2.5-flash:generateContent")
     suspend fun generateContent(
         @Query("key") apiKey: String,
         @Body request: GeminiRequest
@@ -50,11 +50,19 @@ class GeminiProvider @Inject constructor(
         try {
             val response = geminiService.generateContent(apiKey, request)
             if (!response.isSuccessful) {
-                throw GeminiException("API Error: ${response.code()} ${response.message()}")
+                val errorBody = response.errorBody()?.string() ?: "no body"
+                throw GeminiException("API Error ${response.code()}: $errorBody")
             }
             
-            val content = response.body()?.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
-                ?: throw GeminiException("Empty response body or content")
+            // Gemini 2.5 Flash is a thinking model — filter out thought parts
+            // and grab only the actual answer text
+            val parts = response.body()?.candidates?.firstOrNull()?.content?.parts
+                ?: throw GeminiException("Empty response body or candidates")
+
+            val content = parts
+                .filter { it.thought != true }
+                .firstNotNullOfOrNull { it.text }
+                ?: throw GeminiException("No non-thought content in response")
                 
             return gson.fromJson(content, AIResponse::class.java)
         } catch (e: Exception) {

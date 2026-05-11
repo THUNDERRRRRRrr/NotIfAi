@@ -49,7 +49,8 @@ data class GeminiContent(
 )
 
 data class GeminiPart(
-    @SerializedName("text") val text: String
+    @SerializedName("text") val text: String? = null,
+    @SerializedName("thought") val thought: Boolean? = null
 )
 
 data class GeminiResponse(

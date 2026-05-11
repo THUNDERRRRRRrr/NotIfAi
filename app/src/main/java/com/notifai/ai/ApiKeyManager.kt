@@ -96,18 +96,11 @@ class ApiKeyManager @Inject constructor(
     fun getAIModelPreferences(): AIModelPreferences {
         val json = sharedPreferences.getString(KEY_AI_MODEL_PREFS, null)
             ?: return AIModelPreferences()
-        val cached = try {
+        return try {
             gson.fromJson(json, AIModelPreferences::class.java)
         } catch (e: Exception) {
             AIModelPreferences()
         }
-        // Enforce the best models and desired cascade order (Gemini first)
-        // ignoring any previously saved user preferences.
-        return cached.copy(
-            groqModel = "llama-3.3-70b-versatile",
-            openRouterModel = "meta-llama/llama-3.1-8b-instruct:free",
-            cascadeOrder = listOf("gemini", "groq", "openrouter")
-        )
     }
 
     companion object {

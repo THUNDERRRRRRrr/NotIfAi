@@ -21,6 +21,10 @@ class OpenRouterProvider @Inject constructor(
     private val gson: Gson,
 ) {
     suspend fun classify(appName: String, title: String, body: String): AIResponse {
+        if (apiKeyManager.getOpenRouterKey().isNullOrBlank()) {
+            throw OpenRouterException("Missing or empty OpenRouter API key")
+        }
+
         val systemPrompt = AIPrompt.SYSTEM_PROMPT.trimIndent()
 
         val userPrompt = "App: $appName\nTitle: $title\nBody: $body"
@@ -38,7 +42,8 @@ class OpenRouterProvider @Inject constructor(
         try {
             val response = openRouterService.createChatCompletion(request)
             if (!response.isSuccessful) {
-                throw OpenRouterException("API Error: ${response.code()} ${response.message()}")
+                val errorBody = response.errorBody()?.string() ?: "no body"
+                throw OpenRouterException("API Error ${response.code()}: $errorBody")
             }
 
             val content = response.body()?.choices?.firstOrNull()?.message?.content

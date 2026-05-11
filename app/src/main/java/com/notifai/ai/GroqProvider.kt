@@ -21,6 +21,10 @@ class GroqProvider @Inject constructor(
     private val gson: Gson,
 ) {
     suspend fun classify(appName: String, title: String, body: String): AIResponse {
+        if (apiKeyManager.getGroqKey().isNullOrBlank()) {
+            throw GroqException("Missing or empty Groq API key")
+        }
+
         val systemPrompt = AIPrompt.SYSTEM_PROMPT.trimIndent()
 
         val userPrompt = "App: $appName\nTitle: $title\nBody: $body"
@@ -38,10 +42,11 @@ class GroqProvider @Inject constructor(
         try {
             val response = groqService.createChatCompletion(request)
             if (!response.isSuccessful) {
+                val errorBody = response.errorBody()?.string() ?: "no body"
                 if (response.code() == 429) {
-                    throw GroqException("Rate limit exceeded (429)")
+                    throw GroqException("Rate limit exceeded (429): $errorBody")
                 }
-                throw GroqException("API Error: ${response.code()} ${response.message()}")
+                throw GroqException("API Error ${response.code()}: $errorBody")
             }
 
             val content = response.body()?.choices?.firstOrNull()?.message?.content

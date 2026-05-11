@@ -27,6 +27,14 @@ class AIProviderManager @Inject constructor(
     private val _cascadeCount = MutableStateFlow(0)
     val cascadeCount: StateFlow<Int> = _cascadeCount.asStateFlow()
 
+    /** The last API error message, or empty string if the last call succeeded. */
+    private val _lastError = MutableStateFlow("")
+    val lastError: StateFlow<String> = _lastError.asStateFlow()
+
+    /** Per-provider error messages from the most recent cascade run. */
+    private val _providerErrors = MutableStateFlow<Map<String, String>>(emptyMap())
+    val providerErrors: StateFlow<Map<String, String>> = _providerErrors.asStateFlow()
+
     suspend fun classifyNotification(
         appName: String,
         title: String,
@@ -34,9 +42,13 @@ class AIProviderManager @Inject constructor(
     ): AIResponse {
         val prefs = apiKeyManager.getAIModelPreferences()
         var bestResponse: AIResponse? = null
+        val errors = mutableMapOf<String, String>()
+
+        Log.d(TAG, "Starting classification cascade: ${prefs.cascadeOrder}")
 
         for (providerName in prefs.cascadeOrder) {
             try {
+                Log.d(TAG, "Trying provider: $providerName")
                 val startTime = System.currentTimeMillis()
                 val response = callProvider(providerName, appName, title, body)
                 val pingTime = System.currentTimeMillis() - startTime
@@ -44,6 +56,13 @@ class AIProviderManager @Inject constructor(
                 _lastPingMs.value = pingTime
                 _activeProvider.value = providerName
                 _lastConfidence.value = response.confidence
+
+                Log.d(TAG, "$providerName succeeded in ${pingTime}ms — " +
+                    "category=${response.category} confidence=${response.confidence}")
+
+                // Clear error state on success
+                _lastError.value = ""
+                _providerErrors.value = errors.toMap()
 
                 // If cascading is disabled, return the first successful result
                 if (!prefs.enableCascading) return response
@@ -66,16 +85,32 @@ class AIProviderManager @Inject constructor(
                 }
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException) throw e
-                Log.w(TAG, "$providerName failed: ${e.message}")
+                val errorMsg = e.message ?: "Unknown error"
+                errors[providerName] = errorMsg
+                Log.e(TAG, "$providerName failed: $errorMsg", e)
                 continue
             }
         }
 
-        // Return the best response we got, or a fallback UNKNOWN
+        // Publish error info
+        _providerErrors.value = errors.toMap()
+        if (bestResponse == null && errors.isNotEmpty()) {
+            val summary = errors.entries.joinToString(" | ") { "${it.key}: ${it.value}" }
+            _lastError.value = summary
+            Log.e(TAG, "All providers failed: $summary")
+        }
+
+        // Return the best response we got, or a fallback UNKNOWN with error details
         return bestResponse ?: AIResponse(
             category = "UNKNOWN",
             confidence = 0f,
-            reason = "All providers failed",
+            reason = if (errors.isNotEmpty()) {
+                "All providers failed → " + errors.entries.joinToString("; ") {
+                    "${it.key}: ${it.value}"
+                }
+            } else {
+                "All providers failed"
+            },
             shouldBlock = false,
         )
     }
@@ -96,3 +131,4 @@ class AIProviderManager @Inject constructor(
         private const val TAG = "AIProviderManager"
     }
 }
+
