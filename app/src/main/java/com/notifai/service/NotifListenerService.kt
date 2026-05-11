@@ -57,7 +57,7 @@ class NotifListenerService : NotificationListenerService() {
     private val pendingQueue = ConcurrentLinkedQueue<RawNotification>()
 
     /** Cache of recently processed notifications to avoid duplicate API calls and DB entries. */
-    private val processedCache = LruCache<String, Boolean>(50)
+    private val processedCache = LruCache<String, Boolean>(500)
 
     private var batchJob: Job? = null
 
@@ -84,6 +84,9 @@ class NotifListenerService : NotificationListenerService() {
 
         // Ignore our own notifications (foreground channel, etc.)
         if (sbn.packageName == packageName) return
+
+        // Ignore group summaries to prevent double-counting grouped notifications
+        if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0) return
 
         // Ignore system notifications that carry no meaningful text
         val extras = sbn.notification?.extras ?: return

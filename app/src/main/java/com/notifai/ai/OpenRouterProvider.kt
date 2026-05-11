@@ -49,7 +49,8 @@ class OpenRouterProvider @Inject constructor(
             val content = response.body()?.choices?.firstOrNull()?.message?.content
                 ?: throw OpenRouterException("Empty response body or content")
 
-            return gson.fromJson(content, AIResponse::class.java)
+            val cleanContent = content.replace(Regex("```(?:json)?\\s*"), "").replace(Regex("\\s*```"), "").trim()
+            return gson.fromJson(cleanContent, AIResponse::class.java)
         } catch (e: Exception) {
             if (e is kotlinx.coroutines.CancellationException) throw e
             if (e is OpenRouterException) throw e

@@ -64,7 +64,8 @@ class GeminiProvider @Inject constructor(
                 .firstNotNullOfOrNull { it.text }
                 ?: throw GeminiException("No non-thought content in response")
                 
-            return gson.fromJson(content, AIResponse::class.java)
+            val cleanContent = content.replace(Regex("```(?:json)?\\s*"), "").replace(Regex("\\s*```"), "").trim()
+            return gson.fromJson(cleanContent, AIResponse::class.java)
         } catch (e: Exception) {
             if (e is kotlinx.coroutines.CancellationException) throw e
             if (e is GeminiException) throw e
