@@ -30,6 +30,9 @@ interface NotificationDao {
 
     // ── Full-list reads ───────────────────────────────────────────────────────
 
+    @Query("SELECT * FROM notifications ORDER BY timestamp DESC LIMIT :limit")
+    fun getRecentNotifications(limit: Int): Flow<List<NotificationEntity>>
+
     @Query("SELECT * FROM notifications ORDER BY timestamp DESC")
     fun getAllNotifications(): Flow<List<NotificationEntity>>
 

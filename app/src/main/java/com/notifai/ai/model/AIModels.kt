@@ -34,7 +34,7 @@ data class OpenAIChoice(
 
 // Gemini Models
 data class GeminiRequest(
-    @SerializedName("system_instruction") val systemInstruction: GeminiContent?,
+    @SerializedName("systemInstruction") val systemInstruction: GeminiContent?,
     @SerializedName("contents") val contents: List<GeminiContent>,
     @SerializedName("generationConfig") val generationConfig: GeminiGenerationConfig? = null
 )

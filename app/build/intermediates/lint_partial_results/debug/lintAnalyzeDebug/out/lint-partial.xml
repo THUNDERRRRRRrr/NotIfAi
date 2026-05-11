@@ -5,12 +5,12 @@
                     <map id="android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS (used to start an activity)">
                         <location id="0"
                             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/dashboard/DashboardScreen.kt"
-                            line="132"
+                            line="133"
                             column="37"
-                            startOffset="5670"
-                            endLine="132"
+                            startOffset="5749"
+                            endLine="133"
                             endColumn="91"
-                            endOffset="5724"/>
+                            endOffset="5803"/>
                         <location id="1"
                             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/notifai/ui/onboarding/OnboardingScreen.kt"
                             line="114"

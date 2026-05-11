@@ -44,9 +44,9 @@ class DashboardViewModel @Inject constructor(
     // ── Recent notifications (last 20) ────────────────────────────────────────
 
     val recentNotifications: StateFlow<UiState<List<NotificationEntity>>> =
-        repository.getAllNotifications()
+        repository.getRecentNotifications(20)
             .map<List<NotificationEntity>, UiState<List<NotificationEntity>>> {
-                UiState.Success(it.take(20))
+                UiState.Success(it)
             }
             .catch { emit(UiState.Error("Failed to load notifications", it)) }
             .stateIn(
@@ -71,6 +71,7 @@ class DashboardViewModel @Inject constructor(
     val activeProvider: StateFlow<String> = aiProviderManager.activeProvider
     val lastConfidence: StateFlow<Float> = aiProviderManager.lastConfidence
     val cascadeCount: StateFlow<Int> = aiProviderManager.cascadeCount
+    val lastPingMs: StateFlow<Long> = aiProviderManager.lastPingMs
 
     // ── Service running status ────────────────────────────────────────────────
 

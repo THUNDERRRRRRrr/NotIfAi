@@ -18,13 +18,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -208,26 +204,6 @@ fun SettingsScreen(
                         ),
                         modifier = Modifier.fillMaxWidth(),
                     )
-
-                    Spacer(Modifier.height(4.dp))
-
-                    // Groq model dropdown
-                    ModelDropdown(
-                        label = "Groq Model",
-                        selectedModel = aiModelPrefs.groqModel,
-                        options = groqModelOptions,
-                        onSelect = { viewModel.setGroqModel(it) },
-                    )
-
-                    Spacer(Modifier.height(4.dp))
-
-                    // OpenRouter model dropdown
-                    ModelDropdown(
-                        label = "OpenRouter Model",
-                        selectedModel = aiModelPrefs.openRouterModel,
-                        options = openRouterModelOptions,
-                        onSelect = { viewModel.setOpenRouterModel(it) },
-                    )
                 }
             }
 
@@ -408,61 +384,4 @@ private fun BlockingCategoryRow(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ModelDropdown(
-    label: String,
-    selectedModel: String,
-    options: List<Pair<String, String>>,
-    onSelect: (String) -> Unit,
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val displayLabel = options.firstOrNull { it.first == selectedModel }?.second
-        ?: selectedModel
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = it },
-    ) {
-        OutlinedTextField(
-            value = displayLabel,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(label) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable),
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-        ) {
-            options.forEach { (modelId, displayName) ->
-                DropdownMenuItem(
-                    text = { Text(displayName) },
-                    onClick = {
-                        onSelect(modelId)
-                        expanded = false
-                    },
-                )
-            }
-        }
-    }
-}
-
-// ── Model option lists ────────────────────────────────────────────────────────
-
-private val groqModelOptions = listOf(
-    "llama-3.1-8b-instant"    to "Fast ⚡ (Recommended)",
-    "llama-3.3-70b-versatile" to "Accurate \uD83C\uDFAF",
-    "llama3-8b-8192"          to "Balanced ⚖\uFE0F",
-    "mixtral-8x7b-32768"      to "Alternative \uD83D\uDD04",
-)
-
-private val openRouterModelOptions = listOf(
-    "meta-llama/llama-3.1-8b-instruct:free"  to "LLaMA 3.1 Free",
-    "mistralai/mistral-7b-instruct:free"     to "Mistral 7B Free",
-    "google/gemma-2-9b-it:free"              to "Gemma 2 Free",
-    "microsoft/phi-3-mini-128k-instruct:free" to "Phi-3 Free",
-)
+// File ends after BlockingCategoryRow

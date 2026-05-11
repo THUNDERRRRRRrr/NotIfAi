@@ -30,7 +30,7 @@ public final class ApiKeyManager {
     @org.jetbrains.annotations.NotNull()
     private static final java.lang.String KEY_AI_MODEL_PREFS = "pref_ai_model_prefs";
     @org.jetbrains.annotations.NotNull()
-    private static final java.lang.String DEFAULT_PROVIDER = "groq";
+    private static final java.lang.String DEFAULT_PROVIDER = "gemini";
     @org.jetbrains.annotations.NotNull()
     public static final com.notifai.ai.ApiKeyManager.Companion Companion = null;
     

@@ -83,6 +83,7 @@ fun DashboardScreen(
     val activeProvider   by viewModel.activeProvider.collectAsStateWithLifecycle()
     val lastConfidence   by viewModel.lastConfidence.collectAsStateWithLifecycle()
     val cascadeCount     by viewModel.cascadeCount.collectAsStateWithLifecycle()
+    val lastPingMs       by viewModel.lastPingMs.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -164,6 +165,7 @@ fun DashboardScreen(
                     provider = activeProvider,
                     confidence = lastConfidence,
                     cascades = cascadeCount,
+                    pingMs = lastPingMs,
                 )
             }
 
@@ -289,6 +291,7 @@ private fun AIStatusRow(
     provider: String,
     confidence: Float,
     cascades: Int,
+    pingMs: Long,
 ) {
     val chipColor = when (provider.lowercase()) {
         "groq"       -> DeliveryGreen
@@ -336,13 +339,22 @@ private fun AIStatusRow(
             )
         }
 
-        // Cascade count
-        if (cascades > 0) {
-            Text(
-                text = "↻ $cascades",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-            )
+        // Metrics (Cascade and Ping)
+        Column(horizontalAlignment = Alignment.End) {
+            if (pingMs > 0) {
+                Text(
+                    text = "⏱️ ${pingMs}ms",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                )
+            }
+            if (cascades > 0) {
+                Text(
+                    text = "↻ $cascades",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                )
+            }
         }
     }
 }

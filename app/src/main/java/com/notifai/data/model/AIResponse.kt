@@ -28,4 +28,10 @@ data class AIResponse(
 
     @SerializedName(value = "shouldBlock", alternate = ["should_block"])
     val shouldBlock: Boolean,
+
+    @SerializedName("senderVerdict")
+    val senderVerdict: String? = null,
+
+    @SerializedName("redFlags")
+    val redFlags: List<String>? = null,
 )

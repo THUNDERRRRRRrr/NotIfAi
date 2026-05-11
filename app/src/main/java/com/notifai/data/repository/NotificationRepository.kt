@@ -37,6 +37,9 @@ class NotificationRepository @Inject constructor(
 
     // ── Reads ─────────────────────────────────────────────────────────────────
 
+    fun getRecentNotifications(limit: Int = 20): Flow<List<NotificationEntity>> =
+        dao.getRecentNotifications(limit)
+
     fun getAllNotifications(): Flow<List<NotificationEntity>> =
         dao.getAllNotifications()
 

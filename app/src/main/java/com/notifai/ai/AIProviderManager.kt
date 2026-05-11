@@ -21,6 +21,9 @@ class AIProviderManager @Inject constructor(
     private val _lastConfidence = MutableStateFlow(0f)
     val lastConfidence: StateFlow<Float> = _lastConfidence.asStateFlow()
 
+    private val _lastPingMs = MutableStateFlow(0L)
+    val lastPingMs: StateFlow<Long> = _lastPingMs.asStateFlow()
+
     private val _cascadeCount = MutableStateFlow(0)
     val cascadeCount: StateFlow<Int> = _cascadeCount.asStateFlow()
 
@@ -34,7 +37,11 @@ class AIProviderManager @Inject constructor(
 
         for (providerName in prefs.cascadeOrder) {
             try {
+                val startTime = System.currentTimeMillis()
                 val response = callProvider(providerName, appName, title, body)
+                val pingTime = System.currentTimeMillis() - startTime
+                
+                _lastPingMs.value = pingTime
                 _activeProvider.value = providerName
                 _lastConfidence.value = response.confidence
 

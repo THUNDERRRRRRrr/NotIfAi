@@ -109,14 +109,6 @@ class SettingsViewModel @Inject constructor(
         updateAIModelPrefs { it.copy(confidenceThreshold = threshold) }
     }
 
-    fun setGroqModel(model: String) {
-        updateAIModelPrefs { it.copy(groqModel = model) }
-    }
-
-    fun setOpenRouterModel(model: String) {
-        updateAIModelPrefs { it.copy(openRouterModel = model) }
-    }
-
     private fun updateAIModelPrefs(transform: (AIModelPreferences) -> AIModelPreferences) {
         val updated = transform(_aiModelPreferences.value)
         _aiModelPreferences.value = updated

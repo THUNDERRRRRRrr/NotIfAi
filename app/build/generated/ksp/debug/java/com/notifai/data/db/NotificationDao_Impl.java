@@ -230,6 +230,74 @@ public final class NotificationDao_Impl implements NotificationDao {
   }
 
   @Override
+  public Flow<List<NotificationEntity>> getRecentNotifications(final int limit) {
+    final String _sql = "SELECT * FROM notifications ORDER BY timestamp DESC LIMIT ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, limit);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"notifications"}, new Callable<List<NotificationEntity>>() {
+      @Override
+      @NonNull
+      public List<NotificationEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfPackageName = CursorUtil.getColumnIndexOrThrow(_cursor, "package_name");
+          final int _cursorIndexOfAppName = CursorUtil.getColumnIndexOrThrow(_cursor, "app_name");
+          final int _cursorIndexOfTitle = CursorUtil.getColumnIndexOrThrow(_cursor, "title");
+          final int _cursorIndexOfBody = CursorUtil.getColumnIndexOrThrow(_cursor, "body");
+          final int _cursorIndexOfCategory = CursorUtil.getColumnIndexOrThrow(_cursor, "category");
+          final int _cursorIndexOfConfidence = CursorUtil.getColumnIndexOrThrow(_cursor, "confidence");
+          final int _cursorIndexOfReason = CursorUtil.getColumnIndexOrThrow(_cursor, "reason");
+          final int _cursorIndexOfTimestamp = CursorUtil.getColumnIndexOrThrow(_cursor, "timestamp");
+          final int _cursorIndexOfIsBlocked = CursorUtil.getColumnIndexOrThrow(_cursor, "is_blocked");
+          final int _cursorIndexOfAiProvider = CursorUtil.getColumnIndexOrThrow(_cursor, "ai_provider");
+          final List<NotificationEntity> _result = new ArrayList<NotificationEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final NotificationEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpPackageName;
+            _tmpPackageName = _cursor.getString(_cursorIndexOfPackageName);
+            final String _tmpAppName;
+            _tmpAppName = _cursor.getString(_cursorIndexOfAppName);
+            final String _tmpTitle;
+            _tmpTitle = _cursor.getString(_cursorIndexOfTitle);
+            final String _tmpBody;
+            _tmpBody = _cursor.getString(_cursorIndexOfBody);
+            final Category _tmpCategory;
+            final String _tmp;
+            _tmp = _cursor.getString(_cursorIndexOfCategory);
+            _tmpCategory = __categoryConverter.toCategory(_tmp);
+            final float _tmpConfidence;
+            _tmpConfidence = _cursor.getFloat(_cursorIndexOfConfidence);
+            final String _tmpReason;
+            _tmpReason = _cursor.getString(_cursorIndexOfReason);
+            final long _tmpTimestamp;
+            _tmpTimestamp = _cursor.getLong(_cursorIndexOfTimestamp);
+            final boolean _tmpIsBlocked;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsBlocked);
+            _tmpIsBlocked = _tmp_1 != 0;
+            final String _tmpAiProvider;
+            _tmpAiProvider = _cursor.getString(_cursorIndexOfAiProvider);
+            _item = new NotificationEntity(_tmpId,_tmpPackageName,_tmpAppName,_tmpTitle,_tmpBody,_tmpCategory,_tmpConfidence,_tmpReason,_tmpTimestamp,_tmpIsBlocked,_tmpAiProvider);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
   public Flow<List<NotificationEntity>> getAllNotifications() {
     final String _sql = "SELECT * FROM notifications ORDER BY timestamp DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);

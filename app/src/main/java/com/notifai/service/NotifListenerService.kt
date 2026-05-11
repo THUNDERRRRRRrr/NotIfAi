@@ -19,6 +19,7 @@ import com.notifai.data.model.Category
 import com.notifai.data.model.NotificationEntity
 import com.notifai.data.repository.NotificationRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,6 +27,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.inject.Inject
 
@@ -130,55 +132,61 @@ class NotifListenerService : NotificationListenerService() {
 
         Log.d(TAG, "Processing batch of ${batch.size} notification(s)")
 
-        for (raw in batch) {
-            val cacheKey = "${raw.packageName}|${raw.title}|${raw.body}"
-            if (processedCache.get(cacheKey) != null) {
-                continue
-            }
-            processedCache.put(cacheKey, true)
+        supervisorScope {
+            for (raw in batch) {
+                launch {
+                    val cacheKey = "${raw.packageName}|${raw.title}|${raw.body}"
+                    // LruCache operations are thread-safe
+                    if (processedCache.get(cacheKey) != null) {
+                        return@launch
+                    }
+                    processedCache.put(cacheKey, true)
 
-            runCatching {
-                val response = aiProviderManager.classifyNotification(
-                    appName = raw.appName,
-                    title = raw.title,
-                    body = raw.body,
-                )
+                    runCatching {
+                        val response = aiProviderManager.classifyNotification(
+                            appName = raw.appName,
+                            title = raw.title,
+                            body = raw.body,
+                        )
 
-                // Use the BlockingEngine (user prefs + confidence) instead of
-                // blindly trusting the AI's shouldBlock flag.
-                val shouldBlock = blockingEngine.shouldBlock(
-                    response.category,
-                    response.confidence,
-                )
+                        // Use the BlockingEngine (user prefs + confidence) instead of
+                        // blindly trusting the AI's shouldBlock flag.
+                        val shouldBlock = blockingEngine.shouldBlock(
+                            response.category,
+                            response.confidence,
+                        )
 
-                val entity = NotificationEntity(
-                    packageName = raw.packageName,
-                    appName = raw.appName,
-                    title = raw.title,
-                    body = raw.body,
-                    category = runCatching {
-                        Category.valueOf(response.category.uppercase())
-                    }.getOrDefault(Category.UNKNOWN),
-                    confidence = response.confidence,
-                    reason = response.reason,
-                    timestamp = raw.timestamp,
-                    isBlocked = shouldBlock,
-                    aiProvider = aiProviderManager.activeProvider.value,
-                )
+                        val entity = NotificationEntity(
+                            packageName = raw.packageName,
+                            appName = raw.appName,
+                            title = raw.title,
+                            body = raw.body,
+                            category = runCatching {
+                                Category.valueOf(response.category.uppercase())
+                            }.getOrDefault(Category.UNKNOWN),
+                            confidence = response.confidence,
+                            reason = response.reason,
+                            timestamp = raw.timestamp,
+                            isBlocked = shouldBlock,
+                            aiProvider = aiProviderManager.activeProvider.value,
+                        )
 
-                repository.saveNotification(entity)
+                        repository.saveNotification(entity)
 
-                // Cancel the notification if AI says it should be blocked
-                if (entity.isBlocked) {
-                    try {
-                        cancelNotification(raw.sbnKey)
-                        Log.d(TAG, "Blocked & cancelled notification from ${raw.packageName}")
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to cancel notification ${raw.sbnKey}", e)
+                        // Cancel the notification if AI says it should be blocked
+                        if (entity.isBlocked) {
+                            try {
+                                cancelNotification(raw.sbnKey)
+                                Log.d(TAG, "Blocked & cancelled notification from ${raw.packageName}")
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Failed to cancel notification ${raw.sbnKey}", e)
+                            }
+                        }
+                    }.onFailure { e ->
+                        if (e is CancellationException) throw e
+                        Log.e(TAG, "Failed to classify notification from ${raw.packageName}", e)
                     }
                 }
-            }.onFailure { e ->
-                Log.e(TAG, "Failed to classify notification from ${raw.packageName}", e)
             }
         }
     }
