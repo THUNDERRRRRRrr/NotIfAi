@@ -18,3 +18,14 @@
 -keepattributes *Annotation*
 -keep class retrofit2.** { *; }
 -keep class com.google.gson.** { *; }
+
+# Keep AI provider model classes (Gemini / OpenAI request/response DTOs)
+-keep class com.notifai.ai.model.** { *; }
+
+# Keep custom exception classes (used in catch blocks by class name)
+-keep class com.notifai.ai.GeminiException { *; }
+-keep class com.notifai.ai.OpenRouterException { *; }
+-keep class com.notifai.ai.GroqException { *; }
+
+# Keep AI response model used across the app
+-keep class com.notifai.data.model.AIResponse { *; }

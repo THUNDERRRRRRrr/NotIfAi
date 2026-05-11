@@ -1,8 +1,6 @@
 package com.notifai.data.db
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.notifai.data.model.CategoryConverter
@@ -18,29 +16,10 @@ import com.notifai.data.model.NotificationEntity
 @Database(
     entities = [NotificationEntity::class],
     version = 1,
-    exportSchema = true,
+    exportSchema = false,
 )
 @TypeConverters(CategoryConverter::class)
 abstract class NotificationDatabase : RoomDatabase() {
 
     abstract fun notificationDao(): NotificationDao
-
-    companion object {
-        private const val DB_NAME = "notifai.db"
-
-        @Volatile
-        private var INSTANCE: NotificationDatabase? = null
-
-        fun getInstance(context: Context): NotificationDatabase =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    NotificationDatabase::class.java,
-                    DB_NAME,
-                )
-                    .fallbackToDestructiveMigration()   // replace with Migrations before v2
-                    .build()
-                    .also { INSTANCE = it }
-            }
-    }
 }

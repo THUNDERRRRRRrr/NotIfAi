@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -143,6 +144,50 @@ class NotifListenerService : NotificationListenerService() {
                     processedCache.put(cacheKey, true)
 
                     runCatching {
+                        // Check per-app mode override before calling AI
+                        val appMode = getAppMode(raw.packageName)
+
+                        when (appMode) {
+                            "ALWAYS_ALLOW" -> {
+                                // Skip AI — save as IMPORTANT, never block
+                                val entity = NotificationEntity(
+                                    packageName = raw.packageName,
+                                    appName = raw.appName,
+                                    title = raw.title,
+                                    body = raw.body,
+                                    category = Category.IMPORTANT,
+                                    confidence = 1.0f,
+                                    reason = "Always allowed by user",
+                                    timestamp = raw.timestamp,
+                                    isBlocked = false,
+                                    aiProvider = "user_override",
+                                )
+                                repository.saveNotification(entity)
+                                return@launch
+                            }
+                            "ALWAYS_BLOCK" -> {
+                                // Skip AI — save as SPAM and block immediately
+                                val entity = NotificationEntity(
+                                    packageName = raw.packageName,
+                                    appName = raw.appName,
+                                    title = raw.title,
+                                    body = raw.body,
+                                    category = Category.SPAM,
+                                    confidence = 1.0f,
+                                    reason = "Always blocked by user",
+                                    timestamp = raw.timestamp,
+                                    isBlocked = true,
+                                    aiProvider = "user_override",
+                                )
+                                repository.saveNotification(entity)
+                                try {
+                                    cancelNotification(raw.sbnKey)
+                                } catch (_: Exception) { }
+                                return@launch
+                            }
+                            else -> { /* AUTO — fall through to AI classification */ }
+                        }
+
                         val response = aiProviderManager.classifyNotification(
                             appName = raw.appName,
                             title = raw.title,
@@ -236,6 +281,12 @@ class NotifListenerService : NotificationListenerService() {
         val timestamp: Long,
         val sbnKey: String,   // StatusBarNotification.key — needed to cancel
     )
+
+    /** Reads the per-app mode from SharedPreferences (set by AppSettingsViewModel). */
+    private fun getAppMode(packageName: String): String {
+        val prefs = getSharedPreferences("app_modes", Context.MODE_PRIVATE)
+        return prefs.getString(packageName, "AUTO") ?: "AUTO"
+    }
 
     companion object {
         private const val TAG = "NotifListenerService"

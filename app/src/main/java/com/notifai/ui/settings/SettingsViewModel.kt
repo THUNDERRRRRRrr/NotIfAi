@@ -31,7 +31,11 @@ class SettingsViewModel @Inject constructor(
 
     // ── Sensitivity ───────────────────────────────────────────────────────────
 
-    private val _sensitivityLevel = MutableStateFlow(SensitivityLevel.DEFAULT)
+    private val _sensitivityLevel = MutableStateFlow(
+        SensitivityLevel.entries.minByOrNull {
+            kotlin.math.abs(it.confidenceThreshold - apiKeyManager.getBlockingPreferences().minConfidenceThreshold)
+        } ?: SensitivityLevel.DEFAULT
+    )
     val sensitivityLevel: StateFlow<SensitivityLevel> = _sensitivityLevel.asStateFlow()
 
     // ── Per-key save states ───────────────────────────────────────────────────
@@ -74,6 +78,12 @@ class SettingsViewModel @Inject constructor(
 
     fun setSensitivity(level: SensitivityLevel) {
         _sensitivityLevel.value = level
+        // Apply the sensitivity level's threshold to blocking preferences
+        val updated = _blockingPreferences.value.copy(
+            minConfidenceThreshold = level.confidenceThreshold
+        )
+        _blockingPreferences.value = updated
+        apiKeyManager.saveBlockingPreferences(updated)
     }
 
     // ── Blocking Preferences Actions ──────────────────────────────────────────
