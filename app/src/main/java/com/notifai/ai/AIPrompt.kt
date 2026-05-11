@@ -114,6 +114,21 @@ Trigger on ANY of the following clusters:
   Body claims to be from SBI / HDFC / ICICI / Axis / PNB / BOB / Kotak / PayTM
   BUT sender is a 10-digit number, WhatsApp, Telegram, or unknown alphanumeric
   that does NOT appear in the known-legitimate list above.
+  CRITICAL ADDITION for SMS apps (Google Messages, Messages, Samsung Messages,
+  AOSP Messages, Messaging, or any generic SMS/MMS client):
+  When the App name indicates a generic SMS client, the notification title
+  typically shows the sender ID or phone number. If the title does NOT contain
+  a valid TRAI DLT sender-ID pattern (e.g. AD-SBIUPI-T, JX-HDFCBK-T),
+  treat the sender as UNVERIFIED. Any bank-like body content from such an
+  unverified SMS sender -- mentioning credited, debited, A/c, account, UPI,
+  NEFT, IMPS, transaction, Ref no, reversal, balance -- MUST be PHISHING.
+  Real banks ALWAYS send transaction SMS via registered DLT headers, never
+  from unknown sender IDs or personal numbers.
+  Examples that MUST be PHISHING:
+    App=Messages, Title=unknown sender or a phone number,
+    Body=Dear SBI UPI User, ur A/cX8178 credited with Rs200.00...
+    App=Google Messages, Title=+91-9876543210,
+    Body=Your HDFC account debited Rs5000, click here to reverse
 
 2d. UPI / PAYMENT SCAM PATTERNS
   "Send Rs X to receive Rs Y", "approve the collect request to receive money",
@@ -180,11 +195,22 @@ RULE 6 — IMPORTANT  (default for personal / verified transactional)
 ────────────────────────────────────────────────────────────────
 ⚠ NEVER classify as IMPORTANT if the body contains OTP / verification code
   signals. Those belong to RULE 1 (OTP) regardless of sender.
+⚠ NEVER classify as IMPORTANT if the body looks like a bank/financial alert
+  but the App is a generic messaging app (Messages, Google Messages,
+  Samsung Messages, or any SMS client) UNLESS the notification title
+  clearly shows a valid TRAI DLT sender-ID (e.g. "AD-SBIUPI-T").
+  Bank-like messages from generic SMS apps with unknown senders → PHISHING (Rule 2c).
 Trigger if:
   • Personal message from saved contact via WhatsApp, Instagram, iMessage, SMS
+    — "saved contact" means the title shows a contact name, NOT a raw number
+      and NOT a bank/financial institution name without DLT header
   • Verified bank transaction alert from legitimate DLT sender
     (debit/credit alert, balance update, statement ready)
-    — but NOT if the message contains "OTP", "verification code", "do not share",
+    — REQUIRES the App to be the bank's own app (e.g. "SBI YONO", "HDFC Bank")
+      OR the notification title to contain a valid DLT sender-ID format
+    — If the App is "Messages" / "Google Messages" / any generic SMS client,
+      the sender must show a DLT header in the title; otherwise → PHISHING
+    — NOT if the message contains "OTP", "verification code", "do not share",
       or a standalone 4-8 digit code with "is your" / "use" / "verify"
   • Government notification from verified DLT sender (UIDAI, EPFO, IRCTC,
     Income Tax, COWIN, Aarogya Setu, NDRF)

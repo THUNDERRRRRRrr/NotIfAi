@@ -424,30 +424,30 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_notifai_ui_blocked_BlockedViewModel = "com.notifai.ui.blocked.BlockedViewModel";
-
-      static String com_notifai_ui_onboarding_OnboardingViewModel = "com.notifai.ui.onboarding.OnboardingViewModel";
-
-      static String com_notifai_ui_apps_AppSettingsViewModel = "com.notifai.ui.apps.AppSettingsViewModel";
-
       static String com_notifai_ui_dashboard_DashboardViewModel = "com.notifai.ui.dashboard.DashboardViewModel";
 
       static String com_notifai_ui_settings_SettingsViewModel = "com.notifai.ui.settings.SettingsViewModel";
 
-      @KeepFieldType
-      BlockedViewModel com_notifai_ui_blocked_BlockedViewModel2;
+      static String com_notifai_ui_blocked_BlockedViewModel = "com.notifai.ui.blocked.BlockedViewModel";
 
-      @KeepFieldType
-      OnboardingViewModel com_notifai_ui_onboarding_OnboardingViewModel2;
+      static String com_notifai_ui_apps_AppSettingsViewModel = "com.notifai.ui.apps.AppSettingsViewModel";
 
-      @KeepFieldType
-      AppSettingsViewModel com_notifai_ui_apps_AppSettingsViewModel2;
+      static String com_notifai_ui_onboarding_OnboardingViewModel = "com.notifai.ui.onboarding.OnboardingViewModel";
 
       @KeepFieldType
       DashboardViewModel com_notifai_ui_dashboard_DashboardViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_notifai_ui_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      BlockedViewModel com_notifai_ui_blocked_BlockedViewModel2;
+
+      @KeepFieldType
+      AppSettingsViewModel com_notifai_ui_apps_AppSettingsViewModel2;
+
+      @KeepFieldType
+      OnboardingViewModel com_notifai_ui_onboarding_OnboardingViewModel2;
     }
   }
 
@@ -500,30 +500,30 @@ public final class DaggerNotifAIApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_notifai_ui_settings_SettingsViewModel = "com.notifai.ui.settings.SettingsViewModel";
-
-      static String com_notifai_ui_dashboard_DashboardViewModel = "com.notifai.ui.dashboard.DashboardViewModel";
-
-      static String com_notifai_ui_onboarding_OnboardingViewModel = "com.notifai.ui.onboarding.OnboardingViewModel";
+      static String com_notifai_ui_apps_AppSettingsViewModel = "com.notifai.ui.apps.AppSettingsViewModel";
 
       static String com_notifai_ui_blocked_BlockedViewModel = "com.notifai.ui.blocked.BlockedViewModel";
 
-      static String com_notifai_ui_apps_AppSettingsViewModel = "com.notifai.ui.apps.AppSettingsViewModel";
+      static String com_notifai_ui_dashboard_DashboardViewModel = "com.notifai.ui.dashboard.DashboardViewModel";
+
+      static String com_notifai_ui_settings_SettingsViewModel = "com.notifai.ui.settings.SettingsViewModel";
+
+      static String com_notifai_ui_onboarding_OnboardingViewModel = "com.notifai.ui.onboarding.OnboardingViewModel";
 
       @KeepFieldType
-      SettingsViewModel com_notifai_ui_settings_SettingsViewModel2;
-
-      @KeepFieldType
-      DashboardViewModel com_notifai_ui_dashboard_DashboardViewModel2;
-
-      @KeepFieldType
-      OnboardingViewModel com_notifai_ui_onboarding_OnboardingViewModel2;
+      AppSettingsViewModel com_notifai_ui_apps_AppSettingsViewModel2;
 
       @KeepFieldType
       BlockedViewModel com_notifai_ui_blocked_BlockedViewModel2;
 
       @KeepFieldType
-      AppSettingsViewModel com_notifai_ui_apps_AppSettingsViewModel2;
+      DashboardViewModel com_notifai_ui_dashboard_DashboardViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_notifai_ui_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      OnboardingViewModel com_notifai_ui_onboarding_OnboardingViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
