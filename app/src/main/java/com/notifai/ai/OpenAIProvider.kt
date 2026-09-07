@@ -61,3 +61,5 @@ class OpenAIProvider @Inject constructor(
         }
     }
 }
+
+class OpenAIException(message: String) : Exception(message)

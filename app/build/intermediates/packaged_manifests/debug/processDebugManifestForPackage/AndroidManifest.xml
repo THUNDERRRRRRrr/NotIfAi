@@ -39,7 +39,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NotifAI" >
+        android:testOnly="true"
+        android:theme="@style/Theme.NotifAI"
+        android:usesCleartextTraffic="false" >
 
         <!-- ── Main Activity ────────────────────────────────────────────── -->
 
@@ -71,7 +73,7 @@
             -->
             <meta-data
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Intercepts and AI-classifies incoming notifications to filter spam and protect users." />
+                android:value="Intercepts and classifies incoming notifications to filter spam and protect users." />
         </service>
 
         <!-- ── Boot Receiver ────────────────────────────────────────────── -->

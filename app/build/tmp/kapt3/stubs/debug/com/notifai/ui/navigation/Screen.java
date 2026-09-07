@@ -1,8 +1,5 @@
 package com.notifai.ui.navigation;
 
-/**
- * Type-safe route definitions for the NavHost.
- */
 @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000(\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b7\u0018\u00002\u00020\u0001:\u0005\u0007\b\t\n\u000bB\u000f\b\u0004\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004R\u0011\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006\u0082\u0001\u0005\f\r\u000e\u000f\u0010\u00a8\u0006\u0011"}, d2 = {"Lcom/notifai/ui/navigation/Screen;", "", "route", "", "(Ljava/lang/String;)V", "getRoute", "()Ljava/lang/String;", "AppSettings", "Blocked", "Dashboard", "Onboarding", "Settings", "Lcom/notifai/ui/navigation/Screen$AppSettings;", "Lcom/notifai/ui/navigation/Screen$Blocked;", "Lcom/notifai/ui/navigation/Screen$Dashboard;", "Lcom/notifai/ui/navigation/Screen$Onboarding;", "Lcom/notifai/ui/navigation/Screen$Settings;", "app_debug"})
 public abstract class Screen {
     @org.jetbrains.annotations.NotNull()

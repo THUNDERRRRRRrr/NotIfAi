@@ -14,15 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview;
 public final class ApiKeyInputKt {
     private static final long SavedGreen = 0L;
     
-    /**
-     * API key input field with show/hide toggle and an inline Save button.
-     *
-     * [saveState] drives visual feedback:
-     * - Loading  → spinner replaces Save button
-     * - Success("saved") → green ✓ icon + "Saved!" label for 2 s, then reverts
-     * - Error    → red error text below the field
-     * - Success("idle")  → normal Save button
-     */
     @androidx.compose.runtime.Composable()
     public static final void ApiKeyInput(@org.jetbrains.annotations.NotNull()
     java.lang.String label, @org.jetbrains.annotations.NotNull()

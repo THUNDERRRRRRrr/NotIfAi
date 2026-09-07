@@ -24,17 +24,6 @@ import kotlinx.coroutines.Dispatchers;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.inject.Inject;
 
-/**
- * Core notification-interception service.
- *
- * Lifecycle:
- * - Declared in AndroidManifest with BIND_NOTIFICATION_LISTENER_SERVICE permission.
- * - The user grants access via Settings → Notification Access.
- * - Runs as a foreground service to survive memory pressure.
- * - Batches posted notifications and processes them every [BATCH_INTERVAL_MS].
- * - Calls [AIProviderManager.classifyNotification] for each notification, then
- *   persists the result via [NotificationRepository].
- */
 @dagger.hilt.android.AndroidEntryPoint()
 @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000d\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0005\b\u0007\u0018\u0000 12\u00020\u0001:\u000212B\u0005\u00a2\u0006\u0002\u0010\u0002J\b\u0010\"\u001a\u00020#H\u0002J\b\u0010$\u001a\u00020%H\u0002J\u000e\u0010&\u001a\u00020%H\u0082@\u00a2\u0006\u0002\u0010\'J\u0010\u0010(\u001a\u00020\u00162\u0006\u0010)\u001a\u00020\u0016H\u0002J\b\u0010*\u001a\u00020%H\u0016J\b\u0010+\u001a\u00020%H\u0016J\u0012\u0010,\u001a\u00020%2\b\u0010-\u001a\u0004\u0018\u00010.H\u0016J\u0012\u0010/\u001a\u00020%2\b\u0010-\u001a\u0004\u0018\u00010.H\u0016J\b\u00100\u001a\u00020%H\u0002R\u001e\u0010\u0003\u001a\u00020\u00048\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u0010\u0010\t\u001a\u0004\u0018\u00010\nX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u001e\u0010\u000b\u001a\u00020\f8\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0010R\u0014\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00130\u0012X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u001a\u0010\u0014\u001a\u000e\u0012\u0004\u0012\u00020\u0016\u0012\u0004\u0012\u00020\u00170\u0015X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u001e\u0010\u0018\u001a\u00020\u00198\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001a\u0010\u001b\"\u0004\b\u001c\u0010\u001dR\u000e\u0010\u001e\u001a\u00020\u001fX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010 \u001a\u00020!X\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u00063"}, d2 = {"Lcom/notifai/service/NotifListenerService;", "Landroid/service/notification/NotificationListenerService;", "()V", "aiProviderManager", "Lcom/notifai/ai/AIProviderManager;", "getAiProviderManager", "()Lcom/notifai/ai/AIProviderManager;", "setAiProviderManager", "(Lcom/notifai/ai/AIProviderManager;)V", "batchJob", "Lkotlinx/coroutines/Job;", "blockingEngine", "Lcom/notifai/ai/BlockingEngine;", "getBlockingEngine", "()Lcom/notifai/ai/BlockingEngine;", "setBlockingEngine", "(Lcom/notifai/ai/BlockingEngine;)V", "pendingQueue", "Ljava/util/concurrent/ConcurrentLinkedQueue;", "Lcom/notifai/service/NotifListenerService$RawNotification;", "processedCache", "Landroid/util/LruCache;", "", "", "repository", "Lcom/notifai/data/repository/NotificationRepository;", "getRepository", "()Lcom/notifai/data/repository/NotificationRepository;", "setRepository", "(Lcom/notifai/data/repository/NotificationRepository;)V", "serviceJob", "Lkotlinx/coroutines/CompletableJob;", "serviceScope", "Lkotlinx/coroutines/CoroutineScope;", "buildForegroundNotification", "Landroid/app/Notification;", "createNotificationChannel", "", "drainQueue", "(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", "getAppMode", "packageName", "onCreate", "onDestroy", "onNotificationPosted", "sbn", "Landroid/service/notification/StatusBarNotification;", "onNotificationRemoved", "startBatchProcessor", "Companion", "RawNotification", "app_debug"})
 public final class NotifListenerService extends android.service.notification.NotificationListenerService {
@@ -48,16 +37,8 @@ public final class NotifListenerService extends android.service.notification.Not
     private final kotlinx.coroutines.CompletableJob serviceJob = null;
     @org.jetbrains.annotations.NotNull()
     private final kotlinx.coroutines.CoroutineScope serviceScope = null;
-    
-    /**
-     * Thread-safe queue of raw notifications waiting to be classified.
-     */
     @org.jetbrains.annotations.NotNull()
     private final java.util.concurrent.ConcurrentLinkedQueue<com.notifai.service.NotifListenerService.RawNotification> pendingQueue = null;
-    
-    /**
-     * Cache of recently processed notifications to avoid duplicate API calls and DB entries.
-     */
     @org.jetbrains.annotations.NotNull()
     private final android.util.LruCache<java.lang.String, java.lang.Boolean> processedCache = null;
     @org.jetbrains.annotations.Nullable()
@@ -134,9 +115,6 @@ public final class NotifListenerService extends android.service.notification.Not
     private final void createNotificationChannel() {
     }
     
-    /**
-     * Reads the per-app mode from SharedPreferences (set by AppSettingsViewModel).
-     */
     private final java.lang.String getAppMode(java.lang.String packageName) {
         return null;
     }

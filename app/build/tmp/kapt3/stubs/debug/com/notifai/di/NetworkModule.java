@@ -20,7 +20,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 @dagger.Module()
-@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00006\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\b\u00c7\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002J\b\u0010\u0003\u001a\u00020\u0004H\u0007J\u001a\u0010\u0005\u001a\u00020\u00062\b\b\u0001\u0010\u0007\u001a\u00020\u00042\u0006\u0010\b\u001a\u00020\tH\u0007J\u0010\u0010\n\u001a\u00020\u00042\u0006\u0010\u000b\u001a\u00020\fH\u0007J\u001a\u0010\r\u001a\u00020\u000e2\b\b\u0001\u0010\u0007\u001a\u00020\u00042\u0006\u0010\b\u001a\u00020\tH\u0007J\b\u0010\u000f\u001a\u00020\tH\u0007J\u0010\u0010\u0010\u001a\u00020\u00042\u0006\u0010\u000b\u001a\u00020\fH\u0007J\u001a\u0010\u0011\u001a\u00020\u00122\b\b\u0001\u0010\u0007\u001a\u00020\u00042\u0006\u0010\b\u001a\u00020\tH\u0007\u00a8\u0006\u0013"}, d2 = {"Lcom/notifai/di/NetworkModule;", "", "()V", "provideGeminiOkHttp", "Lokhttp3/OkHttpClient;", "provideGeminiService", "Lcom/notifai/ai/GeminiService;", "okHttpClient", "gson", "Lcom/google/gson/Gson;", "provideGroqOkHttp", "apiKeyManager", "Lcom/notifai/ai/ApiKeyManager;", "provideGroqService", "Lcom/notifai/ai/GroqService;", "provideGson", "provideOpenRouterOkHttp", "provideOpenRouterService", "Lcom/notifai/ai/OpenRouterService;", "app_debug"})
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000F\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\b\u00c7\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002J\u0010\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u001a\u0010\u0007\u001a\u00020\b2\b\b\u0001\u0010\t\u001a\u00020\u00042\u0006\u0010\n\u001a\u00020\u000bH\u0007J\b\u0010\f\u001a\u00020\u0004H\u0007J\u001a\u0010\r\u001a\u00020\u000e2\b\b\u0001\u0010\t\u001a\u00020\u00042\u0006\u0010\n\u001a\u00020\u000bH\u0007J\u0010\u0010\u000f\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u001a\u0010\u0010\u001a\u00020\u00112\b\b\u0001\u0010\t\u001a\u00020\u00042\u0006\u0010\n\u001a\u00020\u000bH\u0007J\b\u0010\u0012\u001a\u00020\u000bH\u0007J\u0010\u0010\u0013\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u001a\u0010\u0014\u001a\u00020\u00152\b\b\u0001\u0010\t\u001a\u00020\u00042\u0006\u0010\n\u001a\u00020\u000bH\u0007J\u0010\u0010\u0016\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u001a\u0010\u0017\u001a\u00020\u00182\b\b\u0001\u0010\t\u001a\u00020\u00042\u0006\u0010\n\u001a\u00020\u000bH\u0007\u00a8\u0006\u0019"}, d2 = {"Lcom/notifai/di/NetworkModule;", "", "()V", "provideCustomOkHttp", "Lokhttp3/OkHttpClient;", "apiKeyManager", "Lcom/notifai/ai/ApiKeyManager;", "provideCustomService", "Lcom/notifai/ai/CustomService;", "okHttpClient", "gson", "Lcom/google/gson/Gson;", "provideGeminiOkHttp", "provideGeminiService", "Lcom/notifai/ai/GeminiService;", "provideGroqOkHttp", "provideGroqService", "Lcom/notifai/ai/GroqService;", "provideGson", "provideOpenAiOkHttp", "provideOpenAiService", "Lcom/notifai/ai/OpenAIService;", "provideOpenRouterOkHttp", "provideOpenRouterService", "Lcom/notifai/ai/OpenRouterService;", "app_debug"})
 @dagger.hilt.InstallIn(value = {dagger.hilt.components.SingletonComponent.class})
 public final class NetworkModule {
     @org.jetbrains.annotations.NotNull()
@@ -57,6 +57,24 @@ public final class NetworkModule {
     
     @dagger.Provides()
     @javax.inject.Singleton()
+    @javax.inject.Named(value = "openai")
+    @org.jetbrains.annotations.NotNull()
+    public final okhttp3.OkHttpClient provideOpenAiOkHttp(@org.jetbrains.annotations.NotNull()
+    com.notifai.ai.ApiKeyManager apiKeyManager) {
+        return null;
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
+    @javax.inject.Named(value = "custom")
+    @org.jetbrains.annotations.NotNull()
+    public final okhttp3.OkHttpClient provideCustomOkHttp(@org.jetbrains.annotations.NotNull()
+    com.notifai.ai.ApiKeyManager apiKeyManager) {
+        return null;
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
     @javax.inject.Named(value = "gemini")
     @org.jetbrains.annotations.NotNull()
     public final okhttp3.OkHttpClient provideGeminiOkHttp() {
@@ -77,6 +95,26 @@ public final class NetworkModule {
     @javax.inject.Singleton()
     @org.jetbrains.annotations.NotNull()
     public final com.notifai.ai.OpenRouterService provideOpenRouterService(@javax.inject.Named(value = "openrouter")
+    @org.jetbrains.annotations.NotNull()
+    okhttp3.OkHttpClient okHttpClient, @org.jetbrains.annotations.NotNull()
+    com.google.gson.Gson gson) {
+        return null;
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
+    @org.jetbrains.annotations.NotNull()
+    public final com.notifai.ai.OpenAIService provideOpenAiService(@javax.inject.Named(value = "openai")
+    @org.jetbrains.annotations.NotNull()
+    okhttp3.OkHttpClient okHttpClient, @org.jetbrains.annotations.NotNull()
+    com.google.gson.Gson gson) {
+        return null;
+    }
+    
+    @dagger.Provides()
+    @javax.inject.Singleton()
+    @org.jetbrains.annotations.NotNull()
+    public final com.notifai.ai.CustomService provideCustomService(@javax.inject.Named(value = "custom")
     @org.jetbrains.annotations.NotNull()
     okhttp3.OkHttpClient okHttpClient, @org.jetbrains.annotations.NotNull()
     com.google.gson.Gson gson) {

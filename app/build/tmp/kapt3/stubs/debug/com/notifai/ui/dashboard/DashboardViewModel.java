@@ -107,18 +107,9 @@ public final class DashboardViewModel extends androidx.lifecycle.ViewModel {
         return null;
     }
     
-    /**
-     * Re-check whether [NotifListenerService] is active.
-     * Call this from the UI when the screen resumes (e.g. returning from
-     * the system Notification Access settings screen).
-     */
     public final void refreshServiceStatus() {
     }
     
-    /**
-     * Returns true if the user has granted notification listener access to
-     * this app and the [NotifListenerService] component is enabled.
-     */
     private final boolean checkServiceRunning() {
         return false;
     }

@@ -38,11 +38,6 @@ public final class AppSettingsViewModel extends androidx.lifecycle.ViewModel {
         return null;
     }
     
-    /**
-     * Persists the [mode] override for the given [packageName] and immediately
-     * refreshes the [appList] so the UI reflects the change without waiting for
-     * a DB event.
-     */
     public final void setAppMode(@org.jetbrains.annotations.NotNull()
     java.lang.String packageName, @org.jetbrains.annotations.NotNull()
     com.notifai.ui.apps.AppMode mode) {

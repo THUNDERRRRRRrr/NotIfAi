@@ -59,10 +59,6 @@ public abstract interface NotificationDao {
     public abstract kotlinx.coroutines.flow.Flow<java.util.List<com.notifai.data.model.NotificationEntity>> getNotificationsByCategory(@org.jetbrains.annotations.NotNull()
     com.notifai.data.model.Category category);
     
-    /**
-     * [startOfDay] is Unix epoch ms for local midnight, supplied by the
-     * repository so this query stays clock-agnostic and easily testable.
-     */
     @androidx.room.Query(value = "\n        SELECT COUNT(*) FROM notifications\n        WHERE is_blocked = 1\n          AND timestamp >= :startOfDay\n        ")
     @org.jetbrains.annotations.NotNull()
     public abstract kotlinx.coroutines.flow.Flow<java.lang.Integer> getTodayBlockedCount(long startOfDay);

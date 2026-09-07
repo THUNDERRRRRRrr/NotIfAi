@@ -15,10 +15,6 @@ public final class BlockingEngine {
         super();
     }
     
-    /**
-     * Decides whether a notification should be blocked based on the user's
-     * per-category preferences and the AI's confidence score.
-     */
     public final boolean shouldBlock(@org.jetbrains.annotations.NotNull()
     java.lang.String category, float confidence) {
         return false;

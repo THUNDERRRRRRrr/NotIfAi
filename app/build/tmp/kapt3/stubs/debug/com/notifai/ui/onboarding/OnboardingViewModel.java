@@ -46,36 +46,18 @@ public final class OnboardingViewModel extends androidx.lifecycle.ViewModel {
         return null;
     }
     
-    /**
-     * Advance to the next onboarding step.
-     */
     public final void nextStep() {
     }
     
-    /**
-     * Checks whether notification listener access has been granted, updates
-     * [isPermissionGranted], and returns the result.
-     *
-     * Call this in `onResume` so the UI reacts when the user returns from the
-     * system Notification Access settings screen.
-     */
     public final boolean checkPermission(@org.jetbrains.annotations.NotNull()
     android.content.Context context) {
         return false;
     }
     
-    /**
-     * Returns true if the user has already completed onboarding in a previous
-     * session, allowing the app to skip straight to the main UI.
-     */
     public final boolean isOnboardingComplete() {
         return false;
     }
     
-    /**
-     * Marks onboarding as done. Persist before navigating away so the flag
-     * survives process death.
-     */
     public final void completeOnboarding() {
     }
 }
