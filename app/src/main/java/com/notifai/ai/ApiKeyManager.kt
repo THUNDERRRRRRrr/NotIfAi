@@ -68,6 +68,22 @@ class ApiKeyManager @Inject constructor(
         return sharedPreferences.getString(KEY_OPENAI, null)
     }
 
+    fun saveCustomKey(key: String) {
+        sharedPreferences.edit().putString(KEY_CUSTOM_KEY, key).apply()
+    }
+
+    fun getCustomKey(): String? {
+        return sharedPreferences.getString(KEY_CUSTOM_KEY, null)
+    }
+
+    fun saveCustomUrl(url: String) {
+        sharedPreferences.edit().putString(KEY_CUSTOM_URL, url).apply()
+    }
+
+    fun getCustomUrl(): String? {
+        return sharedPreferences.getString(KEY_CUSTOM_URL, null)
+    }
+
     fun getActiveProvider(): String =
         sharedPreferences.getString(KEY_ACTIVE_PROVIDER, DEFAULT_PROVIDER) ?: DEFAULT_PROVIDER
 
@@ -108,6 +124,8 @@ class ApiKeyManager @Inject constructor(
         private const val KEY_OPENROUTER = "pref_openrouter"
         private const val KEY_GEMINI = "pref_gemini"
         private const val KEY_OPENAI = "pref_openai"
+        private const val KEY_CUSTOM_KEY = "pref_custom_key"
+        private const val KEY_CUSTOM_URL = "pref_custom_url"
         private const val KEY_ACTIVE_PROVIDER = "pref_active_provider"
         private const val KEY_BLOCKING_PREFS = "pref_blocking_prefs"
         private const val KEY_AI_MODEL_PREFS = "pref_ai_model_prefs"

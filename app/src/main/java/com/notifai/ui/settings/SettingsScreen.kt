@@ -69,6 +69,8 @@ fun SettingsScreen(
     val openRouterKey by viewModel.openRouterKey.collectAsStateWithLifecycle()
     val geminiKey     by viewModel.geminiKey.collectAsStateWithLifecycle()
     val openAiKey     by viewModel.openAiKey.collectAsStateWithLifecycle()
+    val customKey     by viewModel.customKey.collectAsStateWithLifecycle()
+    val customUrl     by viewModel.customUrl.collectAsStateWithLifecycle()
     val sensitivity   by viewModel.sensitivityLevel.collectAsStateWithLifecycle()
     val blockingPrefs by viewModel.blockingPreferences.collectAsStateWithLifecycle()
     val aiModelPrefs  by viewModel.aiModelPreferences.collectAsStateWithLifecycle()
@@ -77,6 +79,8 @@ fun SettingsScreen(
     val openRouterSaveState by viewModel.openRouterSaveState.collectAsStateWithLifecycle()
     val geminiSaveState     by viewModel.geminiSaveState.collectAsStateWithLifecycle()
     val openAiSaveState     by viewModel.openAiSaveState.collectAsStateWithLifecycle()
+    val customKeySaveState  by viewModel.customKeySaveState.collectAsStateWithLifecycle()
+    val customUrlSaveState  by viewModel.customUrlSaveState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -85,9 +89,11 @@ fun SettingsScreen(
     var openRouterInput by remember(openRouterKey)  { mutableStateOf(openRouterKey) }
     var geminiInput     by remember(geminiKey)      { mutableStateOf(geminiKey) }
     var openAiInput     by remember(openAiKey)      { mutableStateOf(openAiKey) }
+    var customKeyInput  by remember(customKey)      { mutableStateOf(customKey) }
+    var customUrlInput  by remember(customUrl)      { mutableStateOf(customUrl) }
 
-    LaunchedEffect(groqSaveState, openRouterSaveState, geminiSaveState, openAiSaveState) {
-        listOf(groqSaveState, openRouterSaveState, geminiSaveState, openAiSaveState)
+    LaunchedEffect(groqSaveState, openRouterSaveState, geminiSaveState, openAiSaveState, customKeySaveState, customUrlSaveState) {
+        listOf(groqSaveState, openRouterSaveState, geminiSaveState, openAiSaveState, customKeySaveState, customUrlSaveState)
             .filterIsInstance<UiState.Error>()
             .firstOrNull()
             ?.let { err -> scope.launch { snackbarHostState.showSnackbar(err.message) } }
@@ -140,6 +146,22 @@ fun SettingsScreen(
                 onValueChange = { openAiInput = it },
                 onSave = { viewModel.saveOpenAiKey(openAiInput) },
                 saveState = openAiSaveState,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ApiKeyInput(
+                label = "Custom API Base URL",
+                value = customUrlInput,
+                onValueChange = { customUrlInput = it },
+                onSave = { viewModel.saveCustomUrl(customUrlInput) },
+                saveState = customUrlSaveState,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ApiKeyInput(
+                label = "Custom API Key (Optional)",
+                value = customKeyInput,
+                onValueChange = { customKeyInput = it },
+                onSave = { viewModel.saveCustomKey(customKeyInput) },
+                saveState = customKeySaveState,
                 modifier = Modifier.fillMaxWidth(),
             )
             ApiKeyInput(

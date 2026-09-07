@@ -79,6 +79,23 @@ object NetworkModule {
             .build()
 
     @Provides @Singleton
+    @Named("custom")
+    fun provideCustomOkHttp(apiKeyManager: ApiKeyManager): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val key = apiKeyManager.getCustomKey()
+                val requestBuilder = chain.request().newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                if (!key.isNullOrBlank()) {
+                    requestBuilder.addHeader("Authorization", "Bearer $key")
+                }
+                chain.proceed(requestBuilder.build())
+            }
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .build()
+
+    @Provides @Singleton
     @Named("gemini")
     fun provideGeminiOkHttp(): OkHttpClient =
         OkHttpClient.Builder()
@@ -112,6 +129,15 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(com.notifai.ai.OpenAIService::class.java)
+
+    @Provides @Singleton
+    fun provideCustomService(@Named("custom") okHttpClient: OkHttpClient, gson: Gson): com.notifai.ai.CustomService =
+        Retrofit.Builder()
+            .baseUrl("https://localhost/") // Base URL ignored because we use @Url in the service
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(com.notifai.ai.CustomService::class.java)
 
     @Provides @Singleton
     fun provideGeminiService(@Named("gemini") okHttpClient: OkHttpClient, gson: Gson): GeminiService =

@@ -30,6 +30,12 @@ class SettingsViewModel @Inject constructor(
     private val _openAiKey = MutableStateFlow(apiKeyManager.getOpenAiKey().orEmpty().masked())
     val openAiKey: StateFlow<String> = _openAiKey.asStateFlow()
 
+    private val _customKey = MutableStateFlow(apiKeyManager.getCustomKey().orEmpty().masked())
+    val customKey: StateFlow<String> = _customKey.asStateFlow()
+
+    private val _customUrl = MutableStateFlow(apiKeyManager.getCustomUrl().orEmpty())
+    val customUrl: StateFlow<String> = _customUrl.asStateFlow()
+
     private val _sensitivityLevel = MutableStateFlow(
         SensitivityLevel.entries.minByOrNull {
             kotlin.math.abs(it.confidenceThreshold - apiKeyManager.getBlockingPreferences().minConfidenceThreshold)
@@ -48,6 +54,12 @@ class SettingsViewModel @Inject constructor(
 
     private val _openAiSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
     val openAiSaveState: StateFlow<UiState<String>> = _openAiSaveState.asStateFlow()
+
+    private val _customKeySaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
+    val customKeySaveState: StateFlow<UiState<String>> = _customKeySaveState.asStateFlow()
+
+    private val _customUrlSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
+    val customUrlSaveState: StateFlow<UiState<String>> = _customUrlSaveState.asStateFlow()
 
     private val _blockingPreferences = MutableStateFlow(apiKeyManager.getBlockingPreferences())
     val blockingPreferences: StateFlow<BlockingPreferences> = _blockingPreferences.asStateFlow()
@@ -73,6 +85,16 @@ class SettingsViewModel @Inject constructor(
     fun saveOpenAiKey(key: String) = saveKey(key, _openAiSaveState) {
         apiKeyManager.saveOpenAiKey(key)
         _openAiKey.value = key.masked()
+    }
+
+    fun saveCustomKey(key: String) = saveKey(key, _customKeySaveState) {
+        apiKeyManager.saveCustomKey(key)
+        _customKey.value = key.masked()
+    }
+
+    fun saveCustomUrl(url: String) = saveKey(url, _customUrlSaveState) {
+        apiKeyManager.saveCustomUrl(url)
+        _customUrl.value = url
     }
 
     fun setSensitivity(level: SensitivityLevel) {

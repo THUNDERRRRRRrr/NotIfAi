@@ -6,5 +6,6 @@ data class AIModelPreferences(
     val groqModel: String = "llama-3.3-70b-versatile",
     val openRouterModel: String = "openrouter/auto",
     val openAiModel: String = "gpt-4o-mini",
-    val cascadeOrder: List<String> = listOf("groq", "openrouter", "openai", "gemini"),
+    val customModel: String = "local-model",
+    val cascadeOrder: List<String> = listOf("groq", "openrouter", "openai", "gemini", "custom"),
 )

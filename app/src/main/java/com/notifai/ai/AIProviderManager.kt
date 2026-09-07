@@ -13,6 +13,7 @@ class AIProviderManager @Inject constructor(
     private val groqProvider: GroqProvider,
     private val openRouterProvider: OpenRouterProvider,
     private val openAiProvider: OpenAIProvider,
+    private val customProvider: CustomProvider,
     private val geminiProvider: GeminiProvider,
     private val apiKeyManager: ApiKeyManager,
 ) {
@@ -117,6 +118,7 @@ class AIProviderManager @Inject constructor(
         "groq"       -> groqProvider.classify(appName, title, body)
         "openrouter" -> openRouterProvider.classify(appName, title, body)
         "openai"     -> openAiProvider.classify(appName, title, body)
+        "custom"     -> customProvider.classify(appName, title, body)
         "gemini"     -> geminiProvider.classify(appName, title, body)
         else         -> throw IllegalArgumentException("Unknown provider: $providerName")
     }
