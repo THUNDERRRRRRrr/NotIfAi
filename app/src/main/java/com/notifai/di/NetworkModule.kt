@@ -133,7 +133,7 @@ object NetworkModule {
     @Provides @Singleton
     fun provideCustomService(@Named("custom") okHttpClient: OkHttpClient, gson: Gson): com.notifai.ai.CustomService =
         Retrofit.Builder()
-            .baseUrl("https://localhost/") // Base URL ignored because we use @Url in the service
+            .baseUrl("https://localhost/") 
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

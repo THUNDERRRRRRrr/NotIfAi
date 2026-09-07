@@ -18,8 +18,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -230,6 +235,37 @@ fun SettingsScreen(
                         ),
                         modifier = Modifier.fillMaxWidth(),
                     )
+
+                    Spacer(Modifier.height(16.dp))
+                    Text(
+                        text = "Priority Order",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    aiModelPrefs.cascadeOrder.forEachIndexed { index, provider ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "${index + 1}. ${provider.uppercase()}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(
+                                onClick = { viewModel.moveCascadeItemUp(index) },
+                                enabled = index > 0
+                            ) {
+                                Icon(Icons.Default.ArrowUpward, contentDescription = "Move Up")
+                            }
+                            IconButton(
+                                onClick = { viewModel.moveCascadeItemDown(index) },
+                                enabled = index < aiModelPrefs.cascadeOrder.size - 1
+                            ) {
+                                Icon(Icons.Default.ArrowDownward, contentDescription = "Move Down")
+                            }
+                        }
+                    }
                 }
             }
 

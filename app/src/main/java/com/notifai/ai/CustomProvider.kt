@@ -28,11 +28,7 @@ class CustomProvider @Inject constructor(
         if (url.isNullOrBlank()) {
             throw CustomException("Missing Custom API URL")
         }
-        
-        // We will just let Retrofit use the interceptor for the API key,
-        // but we need to check if we should even proceed.
-        // Actually, some local APIs don't need a key, so we won't strictly require it.
-        
+
         val systemPrompt = AIPrompt.getSystemPrompt(appName).trimIndent()
 
         val userPrompt = "App: $appName\nTitle: $title\nBody: $body"

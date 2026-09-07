@@ -136,6 +136,28 @@ class SettingsViewModel @Inject constructor(
         updateAIModelPrefs { it.copy(confidenceThreshold = threshold) }
     }
 
+    fun updateCascadeOrder(newOrder: List<String>) {
+        updateAIModelPrefs { it.copy(cascadeOrder = newOrder) }
+    }
+
+    fun moveCascadeItemUp(index: Int) {
+        if (index <= 0) return
+        val current = _aiModelPreferences.value.cascadeOrder.toMutableList()
+        val temp = current[index - 1]
+        current[index - 1] = current[index]
+        current[index] = temp
+        updateCascadeOrder(current)
+    }
+
+    fun moveCascadeItemDown(index: Int) {
+        val current = _aiModelPreferences.value.cascadeOrder.toMutableList()
+        if (index < 0 || index >= current.size - 1) return
+        val temp = current[index + 1]
+        current[index + 1] = current[index]
+        current[index] = temp
+        updateCascadeOrder(current)
+    }
+
     private fun updateAIModelPrefs(transform: (AIModelPreferences) -> AIModelPreferences) {
         val updated = transform(_aiModelPreferences.value)
         _aiModelPreferences.value = updated
