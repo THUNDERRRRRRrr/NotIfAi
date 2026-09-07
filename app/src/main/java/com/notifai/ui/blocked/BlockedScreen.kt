@@ -60,6 +60,12 @@ fun BlockedScreen(
     val state by viewModel.blockedNotifications.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    androidx.compose.runtime.LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(

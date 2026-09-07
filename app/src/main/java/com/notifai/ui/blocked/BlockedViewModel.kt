@@ -33,6 +33,10 @@ class BlockedViewModel @Inject constructor(
                 initialValue = UiState.Loading,
             )
 
+    // ── Events ─────────────────────────────────────────────────────────────────
+    private val _events = kotlinx.coroutines.channels.Channel<String>()
+    val events = kotlinx.coroutines.flow.receiveAsFlow(_events)
+
     // ── Actions ───────────────────────────────────────────────────────────────
 
     /**
@@ -42,7 +46,7 @@ class BlockedViewModel @Inject constructor(
     fun unblockNotification(id: Long) {
         viewModelScope.launch {
             runCatching { repository.unblockNotification(id) }
-                .onFailure { /* TODO: surface error snackbar via a shared event channel */ }
+                .onFailure { _events.send("Failed to unblock notification") }
         }
     }
 
@@ -50,7 +54,8 @@ class BlockedViewModel @Inject constructor(
     fun deleteNotification(id: Long) {
         viewModelScope.launch {
             runCatching { repository.deleteNotification(id) }
-                .onFailure { /* TODO: surface error snackbar */ }
+                .onFailure { _events.send("Failed to delete notification") }
         }
     }
 }
+
