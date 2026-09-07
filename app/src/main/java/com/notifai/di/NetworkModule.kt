@@ -31,7 +31,7 @@ object NetworkModule {
     fun provideGroqOkHttp(apiKeyManager: ApiKeyManager): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor { chain ->
-                // Read key fresh on every request so it's never stale
+
                 val key = apiKeyManager.getGroqKey() ?: ""
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer $key")
@@ -48,13 +48,29 @@ object NetworkModule {
     fun provideOpenRouterOkHttp(apiKeyManager: ApiKeyManager): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor { chain ->
-                // Read key fresh on every request so it's never stale
+
                 val key = apiKeyManager.getOpenRouterKey() ?: ""
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer $key")
                     .addHeader("Content-Type", "application/json")
                     .addHeader("HTTP-Referer", "com.notifai")
                     .addHeader("X-Title", "NotifAI")
+                    .build()
+                chain.proceed(request)
+            }
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .build()
+
+    @Provides @Singleton
+    @Named("openai")
+    fun provideOpenAiOkHttp(apiKeyManager: ApiKeyManager): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val key = apiKeyManager.getOpenAiKey() ?: ""
+                val request = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $key")
+                    .addHeader("Content-Type", "application/json")
                     .build()
                 chain.proceed(request)
             }
@@ -87,6 +103,15 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(OpenRouterService::class.java)
+
+    @Provides @Singleton
+    fun provideOpenAiService(@Named("openai") okHttpClient: OkHttpClient, gson: Gson): com.notifai.ai.OpenAIService =
+        Retrofit.Builder()
+            .baseUrl("https://api.openai.com/v1/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(com.notifai.ai.OpenAIService::class.java)
 
     @Provides @Singleton
     fun provideGeminiService(@Named("gemini") okHttpClient: OkHttpClient, gson: Gson): GeminiService =

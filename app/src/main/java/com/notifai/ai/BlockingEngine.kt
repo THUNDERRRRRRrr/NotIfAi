@@ -7,10 +7,7 @@ import javax.inject.Singleton
 class BlockingEngine @Inject constructor(
     private val apiKeyManager: ApiKeyManager,
 ) {
-    /**
-     * Decides whether a notification should be blocked based on the user's
-     * per-category preferences and the AI's confidence score.
-     */
+
     fun shouldBlock(category: String, confidence: Float): Boolean {
         val prefs = apiKeyManager.getBlockingPreferences()
         if (confidence < prefs.minConfidenceThreshold) return false

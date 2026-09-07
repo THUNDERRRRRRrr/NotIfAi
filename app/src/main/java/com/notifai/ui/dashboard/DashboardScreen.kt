@@ -95,7 +95,6 @@ fun DashboardScreen(
 
     LaunchedEffect(Unit) { viewModel.refreshServiceStatus() }
 
-    // Surface errors via Snackbar
     LaunchedEffect(recentState) {
         if (recentState is UiState.Error) {
             snackbarHostState.showSnackbar((recentState as UiState.Error).message)
@@ -124,7 +123,7 @@ fun DashboardScreen(
                 .padding(innerPadding),
             contentPadding = PaddingValues(bottom = 16.dp),
         ) {
-            // ── Service banner ────────────────────────────────────────────
+
             item {
                 AnimatedVisibility(
                     visible = true,
@@ -144,7 +143,6 @@ fun DashboardScreen(
                 }
             }
 
-            // ── Today's stats ─────────────────────────────────────────────
             item {
                 Text(
                     text = "Today's Summary",
@@ -165,7 +163,6 @@ fun DashboardScreen(
                 }
             }
 
-            // ── AI Status Row ─────────────────────────────────────────────
             item {
                 AIStatusRow(
                     provider = activeProvider,
@@ -177,7 +174,6 @@ fun DashboardScreen(
                 )
             }
 
-            // ── Recent header ─────────────────────────────────────────────
             item {
                 Row(
                     modifier = Modifier
@@ -193,7 +189,6 @@ fun DashboardScreen(
                 }
             }
 
-            // ── Notification list ─────────────────────────────────────────
             when (val r = recentState) {
                 is UiState.Loading -> item {
                     Box(Modifier.fillMaxWidth().height(200.dp), Alignment.Center) {
@@ -326,7 +321,7 @@ private fun AIStatusRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            // Provider chip
+
             AssistChip(
                 onClick = {},
                 label = { Text(provider, fontWeight = FontWeight.SemiBold) },
@@ -336,7 +331,6 @@ private fun AIStatusRow(
                 ),
             )
 
-            // Confidence bar + label
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "${(confidence * 100).roundToInt()}% confident",
@@ -355,7 +349,6 @@ private fun AIStatusRow(
                 )
             }
 
-            // Metrics (Cascade and Ping)
             Column(horizontalAlignment = Alignment.End) {
                 if (pingMs > 0) {
                     Text(
@@ -374,7 +367,6 @@ private fun AIStatusRow(
             }
         }
 
-        // ── API Error Banner ──────────────────────────────────────────────
         AnimatedVisibility(
             visible = hasError,
             enter = expandVertically() + fadeIn(),

@@ -42,7 +42,7 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun NotifAITheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color on Android 12+ (Material You)
+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
@@ -56,7 +56,6 @@ fun NotifAITheme(
         else      -> LightColorScheme
     }
 
-    // Tint the status bar to match the background
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

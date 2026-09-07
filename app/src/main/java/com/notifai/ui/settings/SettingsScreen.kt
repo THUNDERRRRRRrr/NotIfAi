@@ -68,26 +68,26 @@ fun SettingsScreen(
     val groqKey       by viewModel.groqKey.collectAsStateWithLifecycle()
     val openRouterKey by viewModel.openRouterKey.collectAsStateWithLifecycle()
     val geminiKey     by viewModel.geminiKey.collectAsStateWithLifecycle()
+    val openAiKey     by viewModel.openAiKey.collectAsStateWithLifecycle()
     val sensitivity   by viewModel.sensitivityLevel.collectAsStateWithLifecycle()
     val blockingPrefs by viewModel.blockingPreferences.collectAsStateWithLifecycle()
     val aiModelPrefs  by viewModel.aiModelPreferences.collectAsStateWithLifecycle()
 
-    // Per-key save states
     val groqSaveState       by viewModel.groqSaveState.collectAsStateWithLifecycle()
     val openRouterSaveState by viewModel.openRouterSaveState.collectAsStateWithLifecycle()
     val geminiSaveState     by viewModel.geminiSaveState.collectAsStateWithLifecycle()
+    val openAiSaveState     by viewModel.openAiSaveState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    // Local editable copies
     var groqInput       by remember(groqKey)       { mutableStateOf(groqKey) }
     var openRouterInput by remember(openRouterKey)  { mutableStateOf(openRouterKey) }
     var geminiInput     by remember(geminiKey)      { mutableStateOf(geminiKey) }
+    var openAiInput     by remember(openAiKey)      { mutableStateOf(openAiKey) }
 
-    // Snackbar on error for any field
-    LaunchedEffect(groqSaveState, openRouterSaveState, geminiSaveState) {
-        listOf(groqSaveState, openRouterSaveState, geminiSaveState)
+    LaunchedEffect(groqSaveState, openRouterSaveState, geminiSaveState, openAiSaveState) {
+        listOf(groqSaveState, openRouterSaveState, geminiSaveState, openAiSaveState)
             .filterIsInstance<UiState.Error>()
             .firstOrNull()
             ?.let { err -> scope.launch { snackbarHostState.showSnackbar(err.message) } }
@@ -115,11 +115,11 @@ fun SettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            // ── API Keys ──────────────────────────────────────────────────
-            SectionHeader("API Keys")
+
+            SectionHeader("Engine API Keys")
 
             ApiKeyInput(
-                label = "Groq API Key",
+                label = "Groq Key",
                 value = groqInput,
                 onValueChange = { groqInput = it },
                 onSave = { viewModel.saveGroqKey(groqInput) },
@@ -127,7 +127,7 @@ fun SettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             ApiKeyInput(
-                label = "OpenRouter API Key",
+                label = "OpenRouter Key",
                 value = openRouterInput,
                 onValueChange = { openRouterInput = it },
                 onSave = { viewModel.saveOpenRouterKey(openRouterInput) },
@@ -135,7 +135,15 @@ fun SettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             ApiKeyInput(
-                label = "Gemini (Backup)",
+                label = "OpenAI Key",
+                value = openAiInput,
+                onValueChange = { openAiInput = it },
+                onSave = { viewModel.saveOpenAiKey(openAiInput) },
+                saveState = openAiSaveState,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ApiKeyInput(
+                label = "Gemini Key",
                 value = geminiInput,
                 onValueChange = { geminiInput = it },
                 onSave = { viewModel.saveGeminiKey(geminiInput) },
@@ -147,10 +155,8 @@ fun SettingsScreen(
             HorizontalDivider()
             Spacer(Modifier.height(8.dp))
 
-            // ── Smart AI Cascading ────────────────────────────────────────
-            SectionHeader("Smart AI Cascading")
+            SectionHeader("Smart Engine Cascading")
 
-            // Toggle row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -178,7 +184,6 @@ fun SettingsScreen(
                 )
             }
 
-            // Cascading options — visible only when cascading is ON
             AnimatedVisibility(
                 visible = aiModelPrefs.enableCascading,
                 enter = expandVertically(),
@@ -187,7 +192,6 @@ fun SettingsScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Spacer(Modifier.height(4.dp))
 
-                    // Cascade threshold slider
                     val cascadePct = (aiModelPrefs.confidenceThreshold * 100).roundToInt()
                     Text(
                         text = "Cascade if confidence below $cascadePct%",
@@ -197,7 +201,7 @@ fun SettingsScreen(
                         value = aiModelPrefs.confidenceThreshold,
                         onValueChange = { viewModel.updateCascadeThreshold(it) },
                         valueRange = 0.5f..1f,
-                        steps = 9,  // 0.05 increments → 10 segments → 9 intermediate stops
+                        steps = 9,  
                         colors = SliderDefaults.colors(
                             thumbColor = MaterialTheme.colorScheme.primary,
                             activeTrackColor = MaterialTheme.colorScheme.primary,
@@ -211,7 +215,6 @@ fun SettingsScreen(
             HorizontalDivider()
             Spacer(Modifier.height(8.dp))
 
-            // ── Blocking Rules ────────────────────────────────────────────
             SectionHeader("What to Block")
 
             BlockingCategoryRow(
@@ -259,12 +262,11 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(8.dp))
 
-            // ── Blocking Confidence Threshold ─────────────────────────────
             SectionHeader("Confidence Threshold")
 
             val pct = (blockingPrefs.minConfidenceThreshold * 100).roundToInt()
             Text(
-                text = "Block only if AI is $pct% confident",
+                text = "Block only if Engine is $pct% confident",
                 style = MaterialTheme.typography.bodyMedium,
             )
 
@@ -290,7 +292,6 @@ fun SettingsScreen(
             HorizontalDivider()
             Spacer(Modifier.height(8.dp))
 
-            // ── Filter Sensitivity ────────────────────────────────────────
             SectionHeader("Filter Sensitivity")
 
             val levels = SensitivityLevel.entries
@@ -325,8 +326,6 @@ fun SettingsScreen(
         }
     }
 }
-
-// ── Reusable Composables ──────────────────────────────────────────────────────
 
 @Composable
 private fun SectionHeader(title: String) {
@@ -384,4 +383,3 @@ private fun BlockingCategoryRow(
     }
 }
 
-// File ends after BlockingCategoryRow

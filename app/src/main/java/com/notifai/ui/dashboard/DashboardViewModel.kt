@@ -29,8 +29,6 @@ class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
-    // ── Dashboard stats ───────────────────────────────────────────────────────
-
     val dashboardStats: StateFlow<UiState<DashboardStats>> =
         repository.getDashboardStats()
             .map<DashboardStats, UiState<DashboardStats>> { UiState.Success(it) }
@@ -40,8 +38,6 @@ class DashboardViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = UiState.Loading,
             )
-
-    // ── Recent notifications (last 20) ────────────────────────────────────────
 
     val recentNotifications: StateFlow<UiState<List<NotificationEntity>>> =
         repository.getRecentNotifications(20)
@@ -55,8 +51,6 @@ class DashboardViewModel @Inject constructor(
                 initialValue = UiState.Loading,
             )
 
-    // ── Blocked today count ───────────────────────────────────────────────────
-
     val blockedToday: StateFlow<Int> =
         repository.getTodayBlockedCount()
             .catch { emit(0) }
@@ -66,8 +60,6 @@ class DashboardViewModel @Inject constructor(
                 initialValue = 0,
             )
 
-    // ── AI Provider status (from AIProviderManager) ───────────────────────────
-
     val activeProvider: StateFlow<String> = aiProviderManager.activeProvider
     val lastConfidence: StateFlow<Float> = aiProviderManager.lastConfidence
     val cascadeCount: StateFlow<Int> = aiProviderManager.cascadeCount
@@ -75,24 +67,13 @@ class DashboardViewModel @Inject constructor(
     val lastError: StateFlow<String> = aiProviderManager.lastError
     val providerErrors: StateFlow<Map<String, String>> = aiProviderManager.providerErrors
 
-    // ── Service running status ────────────────────────────────────────────────
-
     private val _isServiceRunning = MutableStateFlow(checkServiceRunning())
     val isServiceRunning: StateFlow<Boolean> = _isServiceRunning.asStateFlow()
 
-    /**
-     * Re-check whether [NotifListenerService] is active.
-     * Call this from the UI when the screen resumes (e.g. returning from
-     * the system Notification Access settings screen).
-     */
     fun refreshServiceStatus() {
         _isServiceRunning.value = checkServiceRunning()
     }
 
-    /**
-     * Returns true if the user has granted notification listener access to
-     * this app and the [NotifListenerService] component is enabled.
-     */
     private fun checkServiceRunning(): Boolean {
         val enabledListeners = Settings.Secure.getString(
             context.contentResolver,

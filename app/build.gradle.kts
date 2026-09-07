@@ -50,12 +50,12 @@ android {
 }
 
 dependencies {
-    // ── AndroidX Core ──────────────────────────────────────────────────────
+    
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.lifecycle.runtime.ktx)
 
-    // ── Jetpack Compose BOM + Material 3 ──────────────────────────────────
+    
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -71,50 +71,50 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
-    // ── Hilt (Dependency Injection) ────────────────────────────────────────
+    
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
 
-    // ── Room Database ──────────────────────────────────────────────────────
+    
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    // ── Retrofit + OkHttp + Gson Converter ────────────────────────────────
+    
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
 
-    // ── Kotlin Coroutines ──────────────────────────────────────────────────
+    
     implementation(libs.kotlinx.coroutines.android)
 
-    // ── EncryptedSharedPreferences ─────────────────────────────────────────
+    
     implementation(libs.security.crypto)
 
-    // ── Lifecycle ViewModel + StateFlow ───────────────────────────────────
+    
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)
 
-    // ── Navigation Compose ─────────────────────────────────────────────────
+    
     implementation(libs.navigation.compose)
 
-    // ── Google Fonts (Inter) ───────────────────────────────────────────────
+    
     implementation(libs.androidx.compose.ui.text.google.fonts)
 
-    // ── Accompanist ────────────────────────────────────────────────────────
+    
     implementation(libs.accompanist.drawablepainter)
 
-    // ── Testing ────────────────────────────────────────────────────────────
+    
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
-// Allow references to generated code (Hilt)
+
 kapt {
     correctErrorTypes = true
 }

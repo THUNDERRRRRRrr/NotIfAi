@@ -41,7 +41,6 @@ fun BottomNavBar(
     val backStack by navController.currentBackStackEntryAsState()
     val currentRoute = backStack?.destination?.route
 
-    // Hide on onboarding
     AnimatedVisibility(
         visible = currentRoute != Screen.Onboarding.route,
         enter = slideInVertically { it },

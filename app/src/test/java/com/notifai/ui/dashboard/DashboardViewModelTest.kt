@@ -47,11 +47,9 @@ class DashboardViewModelTest {
         every { anyConstructed<ComponentName>().flattenToString() } returns "com.notifai/com.notifai.service.NotifListenerService"
 
         every { context.contentResolver } returns contentResolver
-        
-        // Default to not running
+
         every { Settings.Secure.getString(contentResolver, "enabled_notification_listeners") } returns ""
 
-        // Setup repository mock responses
         every { repository.getDashboardStats() } returns flowOf(
             DashboardStats(
                 todayBlocked = 5,
@@ -85,7 +83,7 @@ class DashboardViewModelTest {
         viewModel = DashboardViewModel(repository, aiProviderManager, context)
 
         viewModel.dashboardStats.test {
-            // First emission is either Loading or already Success depending on how quickly flow is collected
+
             val initial = awaitItem()
             if (initial is UiState.Loading) {
                 val success = awaitItem() as UiState.Success
@@ -141,7 +139,7 @@ class DashboardViewModelTest {
         viewModel.blockedToday.test {
             val item = awaitItem()
             if (item == 0) {
-                // Loading or default state
+
                 val successItem = awaitItem()
                 assertEquals(5, successItem)
             } else {
@@ -156,7 +154,7 @@ class DashboardViewModelTest {
         every { Settings.Secure.getString(contentResolver, "enabled_notification_listeners") } returns expectedComponent
 
         viewModel = DashboardViewModel(repository, aiProviderManager, context)
-        
+
         viewModel.isServiceRunning.test {
             assertEquals(true, awaitItem())
         }
@@ -182,7 +180,6 @@ class DashboardViewModelTest {
         viewModel.isServiceRunning.test {
             assertEquals(false, awaitItem())
 
-            // Now enable it
             val expectedComponent = "com.notifai/com.notifai.service.NotifListenerService"
             every { Settings.Secure.getString(contentResolver, "enabled_notification_listeners") } returns expectedComponent
 

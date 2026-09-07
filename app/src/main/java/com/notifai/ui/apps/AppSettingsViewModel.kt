@@ -30,16 +30,14 @@ class AppSettingsViewModel @Inject constructor(
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    // ── State ─────────────────────────────────────────────────────────────────
-
     private val _appList = MutableStateFlow<UiState<List<AppNotificationSetting>>>(UiState.Loading)
     val appList: StateFlow<UiState<List<AppNotificationSetting>>> = _appList.asStateFlow()
 
     init {
-        // React to DB changes: rebuild app list whenever notification data changes.
+
         repository.getAllNotifications()
             .map { notifications ->
-                // Group notification count by packageName.
+
                 val countByPackage = notifications
                     .groupingBy { it.packageName }
                     .eachCount()
@@ -51,24 +49,14 @@ class AppSettingsViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    // ── Actions ───────────────────────────────────────────────────────────────
-
-    /**
-     * Persists the [mode] override for the given [packageName] and immediately
-     * refreshes the [appList] so the UI reflects the change without waiting for
-     * a DB event.
-     */
     fun setAppMode(packageName: String, mode: AppMode) {
         prefs.edit().putString(packageName, mode.name).apply()
 
-        // Patch the current list in-place for instant UI feedback.
         val current = (_appList.value as? UiState.Success)?.data ?: return
         _appList.value = UiState.Success(
             current.map { if (it.packageName == packageName) it.copy(mode = mode) else it }
         )
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private fun buildAppList(countByPackage: Map<String, Int>): List<AppNotificationSetting> {
         val pm = context.packageManager
@@ -84,7 +72,7 @@ class AppSettingsViewModel @Inject constructor(
                         mode = AppMode.fromString(prefs.getString(pkg, null)),
                         notificationCount = count,
                     )
-                }.getOrNull()   // Skip apps that were uninstalled since last notification
+                }.getOrNull()   
             }
     }
 }

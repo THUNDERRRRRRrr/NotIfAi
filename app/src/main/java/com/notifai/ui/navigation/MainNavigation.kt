@@ -24,14 +24,12 @@ import com.notifai.ui.settings.SettingsScreen
 fun MainNavigation() {
     val navController = rememberNavController()
 
-    // Determine start destination once at composition time
     val onboardingViewModel: OnboardingViewModel = hiltViewModel()
     val startDestination = remember {
         if (onboardingViewModel.isOnboardingComplete()) Screen.Dashboard.route
         else Screen.Onboarding.route
     }
 
-    // Observe blocked count for the badge
     val blockedViewModel: BlockedViewModel = hiltViewModel()
     val blockedState by blockedViewModel.blockedNotifications.collectAsStateWithLifecycle()
     val blockedCount = (blockedState as? UiState.Success)?.data?.size ?: 0

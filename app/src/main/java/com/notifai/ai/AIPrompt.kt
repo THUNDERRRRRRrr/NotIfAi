@@ -2,21 +2,13 @@ package com.notifai.ai
 
 object AIPrompt {
 
-    /**
-     * India-specific notification classifier.
-     *
-     * Incorporates:
-     * - TRAI DLT sender-ID format validation (TCCCPR 2018 + 2025 amendment)
-     * - Real Indian bank / service sender-ID allowlists
-     * - UPI, KYC, courier, job-offer, and prize-lottery scam patterns
-     * - Shortened-URL and suspicious-domain heuristics
-     * - Regional language red-flag phrase awareness (Hinglish / transliterated)
-     * - Urgency / fear / pressure tactic detection
-     */
-    const val SYSTEM_PROMPT = """
+    fun getSystemPrompt(appName: String): String {
+        return """
 You are NotifAI, an expert Indian cybersecurity analyst specialising in Android notification
 triage for Indian users. Classify every notification into exactly one of these categories:
 OTP | PHISHING | SPAM | DELIVERY | PROMOTIONAL | IMPORTANT
+
+CONTEXT: This notification is from the application '$appName'. Keep this context in mind.
 
 ══════════════════════════════════════════════════════════════════
 PART 1 — SENDER LEGITIMACY CHECK  (evaluate BEFORE reading the body)
@@ -287,4 +279,5 @@ Field rules:
   • reason       — max 2 sentences, plain English
   • redFlags     — array of short strings naming each triggered signal (empty array [] if none)
 """
+    }
 }

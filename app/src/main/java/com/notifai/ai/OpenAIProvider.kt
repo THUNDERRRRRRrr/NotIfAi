@@ -9,20 +9,20 @@ import retrofit2.http.POST
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface GroqService {
-    @POST("openai/v1/chat/completions")
+interface OpenAIService {
+    @POST("chat/completions")
     suspend fun createChatCompletion(@Body request: OpenAIRequest): Response<OpenAIResponse>
 }
 
 @Singleton
-class GroqProvider @Inject constructor(
-    private val groqService: GroqService,
+class OpenAIProvider @Inject constructor(
+    private val openAiService: OpenAIService,
     private val apiKeyManager: ApiKeyManager,
     private val gson: Gson,
 ) {
     suspend fun classify(appName: String, title: String, body: String): AIResponse {
-        if (apiKeyManager.getGroqKey().isNullOrBlank()) {
-            throw GroqException("Missing or empty Groq API key")
+        if (apiKeyManager.getOpenAiKey().isNullOrBlank()) {
+            throw OpenAIException("Missing or empty OpenAI API key")
         }
 
         val systemPrompt = AIPrompt.getSystemPrompt(appName).trimIndent()
@@ -30,7 +30,7 @@ class GroqProvider @Inject constructor(
         val userPrompt = "App: $appName\nTitle: $title\nBody: $body"
 
         val request = OpenAIRequest(
-            model = apiKeyManager.getAIModelPreferences().groqModel,
+            model = apiKeyManager.getAIModelPreferences().openAiModel,
             messages = listOf(
                 OpenAIMessage(role = "system", content = systemPrompt),
                 OpenAIMessage(role = "user", content = userPrompt)
@@ -40,24 +40,24 @@ class GroqProvider @Inject constructor(
         )
 
         try {
-            val response = groqService.createChatCompletion(request)
+            val response = openAiService.createChatCompletion(request)
             if (!response.isSuccessful) {
                 val errorBody = response.errorBody()?.string() ?: "no body"
                 if (response.code() == 429) {
-                    throw GroqException("Rate limit exceeded (429): $errorBody")
+                    throw OpenAIException("Rate limit exceeded (429): $errorBody")
                 }
-                throw GroqException("API Error ${response.code()}: $errorBody")
+                throw OpenAIException("API Error ${response.code()}: $errorBody")
             }
 
             val content = response.body()?.choices?.firstOrNull()?.message?.content
-                ?: throw GroqException("Empty response body or content")
+                ?: throw OpenAIException("Empty response body or content")
 
             val cleanContent = content.replace(Regex("```(?:json)?\\s*"), "").replace(Regex("\\s*```"), "").trim()
             return gson.fromJson(cleanContent, AIResponse::class.java)
         } catch (e: Exception) {
             if (e is kotlinx.coroutines.CancellationException) throw e
-            if (e is GroqException) throw e
-            throw GroqException("Network or parsing error: ${e.message}")
+            if (e is OpenAIException) throw e
+            throw OpenAIException("Network or parsing error: ${e.message}")
         }
     }
 }

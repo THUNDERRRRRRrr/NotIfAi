@@ -31,12 +31,10 @@ class ApiKeyManager @Inject constructor(
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
         } catch (e: Exception) {
-            // Fallback to regular SharedPreferences if Keystore is corrupted
+
             context.getSharedPreferences("notifai_api_keys_fallback", Context.MODE_PRIVATE)
         }
     }
-
-    // ── API Keys ──────────────────────────────────────────────────────────────
 
     fun saveGroqKey(key: String) {
         sharedPreferences.edit().putString(KEY_GROQ, key).apply()
@@ -62,7 +60,13 @@ class ApiKeyManager @Inject constructor(
         return sharedPreferences.getString(KEY_GEMINI, null)
     }
 
-    // ── Active Provider ───────────────────────────────────────────────────────
+    fun saveOpenAiKey(key: String) {
+        sharedPreferences.edit().putString(KEY_OPENAI, key).apply()
+    }
+
+    fun getOpenAiKey(): String? {
+        return sharedPreferences.getString(KEY_OPENAI, null)
+    }
 
     fun getActiveProvider(): String =
         sharedPreferences.getString(KEY_ACTIVE_PROVIDER, DEFAULT_PROVIDER) ?: DEFAULT_PROVIDER
@@ -70,8 +74,6 @@ class ApiKeyManager @Inject constructor(
     fun setActiveProvider(provider: String) {
         sharedPreferences.edit().putString(KEY_ACTIVE_PROVIDER, provider).apply()
     }
-
-    // ── Blocking Preferences ──────────────────────────────────────────────────
 
     fun saveBlockingPreferences(prefs: BlockingPreferences) {
         sharedPreferences.edit().putString(KEY_BLOCKING_PREFS, gson.toJson(prefs)).apply()
@@ -86,8 +88,6 @@ class ApiKeyManager @Inject constructor(
             BlockingPreferences()
         }
     }
-
-    // ── AI Model Preferences (cascading + model selection) ────────────────────
 
     fun saveAIModelPreferences(prefs: AIModelPreferences) {
         sharedPreferences.edit().putString(KEY_AI_MODEL_PREFS, gson.toJson(prefs)).apply()
@@ -107,6 +107,7 @@ class ApiKeyManager @Inject constructor(
         private const val KEY_GROQ = "pref_groq"
         private const val KEY_OPENROUTER = "pref_openrouter"
         private const val KEY_GEMINI = "pref_gemini"
+        private const val KEY_OPENAI = "pref_openai"
         private const val KEY_ACTIVE_PROVIDER = "pref_active_provider"
         private const val KEY_BLOCKING_PREFS = "pref_blocking_prefs"
         private const val KEY_AI_MODEL_PREFS = "pref_ai_model_prefs"

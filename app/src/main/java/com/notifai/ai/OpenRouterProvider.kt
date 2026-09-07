@@ -25,7 +25,7 @@ class OpenRouterProvider @Inject constructor(
             throw OpenRouterException("Missing or empty OpenRouter API key")
         }
 
-        val systemPrompt = AIPrompt.SYSTEM_PROMPT.trimIndent()
+        val systemPrompt = AIPrompt.getSystemPrompt(appName).trimIndent()
 
         val userPrompt = "App: $appName\nTitle: $title\nBody: $body"
 

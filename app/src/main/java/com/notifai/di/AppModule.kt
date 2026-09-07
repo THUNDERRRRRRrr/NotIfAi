@@ -12,13 +12,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/**
- * Hilt module that wires the entire data layer into the DI graph.
- *
- * All bindings are [Singleton] so that the database connection and
- * repository state are shared across the whole application lifetime,
- * including the [com.notifai.service.NotifListenerService].
- */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -33,7 +26,7 @@ object AppModule {
             NotificationDatabase::class.java,
             "notifai.db",
         )
-            .fallbackToDestructiveMigration()   // replace with explicit Migrations pre-release
+            .fallbackToDestructiveMigration()   
             .build()
 
     @Provides

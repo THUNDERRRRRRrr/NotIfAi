@@ -19,8 +19,6 @@ class BlockedViewModel @Inject constructor(
     private val repository: NotificationRepository,
 ) : ViewModel() {
 
-    // ── State ─────────────────────────────────────────────────────────────────
-
     val blockedNotifications: StateFlow<UiState<List<NotificationEntity>>> =
         repository.getBlockedNotifications()
             .map<List<NotificationEntity>, UiState<List<NotificationEntity>>> {
@@ -33,16 +31,9 @@ class BlockedViewModel @Inject constructor(
                 initialValue = UiState.Loading,
             )
 
-    // ── Events ─────────────────────────────────────────────────────────────────
     private val _events = kotlinx.coroutines.channels.Channel<String>()
     val events = kotlinx.coroutines.flow.receiveAsFlow(_events)
 
-    // ── Actions ───────────────────────────────────────────────────────────────
-
-    /**
-     * Moves a notification from the blocked list back to the allowed feed.
-     * The Room Flow will automatically push a fresh list to [blockedNotifications].
-     */
     fun unblockNotification(id: Long) {
         viewModelScope.launch {
             runCatching { repository.unblockNotification(id) }
@@ -50,7 +41,6 @@ class BlockedViewModel @Inject constructor(
         }
     }
 
-    /** Permanently removes a notification from the database. */
     fun deleteNotification(id: Long) {
         viewModelScope.launch {
             runCatching { repository.deleteNotification(id) }

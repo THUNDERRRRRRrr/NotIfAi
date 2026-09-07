@@ -76,7 +76,7 @@ fun AppSettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            // Search bar
+
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -145,7 +145,7 @@ private fun AppSettingRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            // App icon + name
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f),
@@ -184,7 +184,6 @@ private fun AppSettingRow(
 
             Spacer(Modifier.width(8.dp))
 
-            // Mode dropdown
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = it },

@@ -30,10 +30,6 @@ import androidx.compose.ui.unit.sp
 import com.notifai.ui.theme.NotifAITheme
 import com.notifai.ui.theme.SpamRed
 
-/**
- * Compact stat card showing a large [count], a [title] label, a colored
- * icon, and a subtle background tint derived from [color].
- */
 @Composable
 fun StatCard(
     title: String,

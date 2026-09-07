@@ -59,7 +59,6 @@ fun OnboardingScreen(
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    // Auto-advance when permission is detected after returning from system settings
     LaunchedEffect(isPermissionGranted) {
         if (isPermissionGranted && step == 2) {
             viewModel.completeOnboarding()
@@ -69,7 +68,6 @@ fun OnboardingScreen(
         }
     }
 
-    // Re-check permission every time the screen resumes
     LaunchedEffect(lifecycle) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
             viewModel.checkPermission(context)
@@ -92,12 +90,10 @@ fun OnboardingScreen(
     ) {
         Spacer(Modifier.height(32.dp))
 
-        // Step dots
         StepIndicator(currentStep = step, totalSteps = 3)
 
         Spacer(Modifier.height(48.dp))
 
-        // Animated step content
         AnimatedContent(
             targetState = step,
             transitionSpec = {

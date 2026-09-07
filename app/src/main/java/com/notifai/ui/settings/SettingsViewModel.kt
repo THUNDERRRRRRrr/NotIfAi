@@ -18,8 +18,6 @@ class SettingsViewModel @Inject constructor(
     private val apiKeyManager: ApiKeyManager,
 ) : ViewModel() {
 
-    // ── API key display (masked) ───────────────────────────────────────────────
-
     private val _groqKey = MutableStateFlow(apiKeyManager.getGroqKey().orEmpty().masked())
     val groqKey: StateFlow<String> = _groqKey.asStateFlow()
 
@@ -29,7 +27,8 @@ class SettingsViewModel @Inject constructor(
     private val _geminiKey = MutableStateFlow(apiKeyManager.getGeminiKey().orEmpty().masked())
     val geminiKey: StateFlow<String> = _geminiKey.asStateFlow()
 
-    // ── Sensitivity ───────────────────────────────────────────────────────────
+    private val _openAiKey = MutableStateFlow(apiKeyManager.getOpenAiKey().orEmpty().masked())
+    val openAiKey: StateFlow<String> = _openAiKey.asStateFlow()
 
     private val _sensitivityLevel = MutableStateFlow(
         SensitivityLevel.entries.minByOrNull {
@@ -37,8 +36,6 @@ class SettingsViewModel @Inject constructor(
         } ?: SensitivityLevel.DEFAULT
     )
     val sensitivityLevel: StateFlow<SensitivityLevel> = _sensitivityLevel.asStateFlow()
-
-    // ── Per-key save states ───────────────────────────────────────────────────
 
     private val _groqSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
     val groqSaveState: StateFlow<UiState<String>> = _groqSaveState.asStateFlow()
@@ -49,17 +46,14 @@ class SettingsViewModel @Inject constructor(
     private val _geminiSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
     val geminiSaveState: StateFlow<UiState<String>> = _geminiSaveState.asStateFlow()
 
-    // ── Blocking Preferences ──────────────────────────────────────────────────
+    private val _openAiSaveState = MutableStateFlow<UiState<String>>(UiState.Success("idle"))
+    val openAiSaveState: StateFlow<UiState<String>> = _openAiSaveState.asStateFlow()
 
     private val _blockingPreferences = MutableStateFlow(apiKeyManager.getBlockingPreferences())
     val blockingPreferences: StateFlow<BlockingPreferences> = _blockingPreferences.asStateFlow()
 
-    // ── AI Model Preferences (cascading + model selection) ────────────────────
-
     private val _aiModelPreferences = MutableStateFlow(apiKeyManager.getAIModelPreferences())
     val aiModelPreferences: StateFlow<AIModelPreferences> = _aiModelPreferences.asStateFlow()
-
-    // ── API Key Actions ───────────────────────────────────────────────────────
 
     fun saveGroqKey(key: String) = saveKey(key, _groqSaveState) {
         apiKeyManager.saveGroqKey(key)
@@ -76,17 +70,20 @@ class SettingsViewModel @Inject constructor(
         _geminiKey.value = key.masked()
     }
 
+    fun saveOpenAiKey(key: String) = saveKey(key, _openAiSaveState) {
+        apiKeyManager.saveOpenAiKey(key)
+        _openAiKey.value = key.masked()
+    }
+
     fun setSensitivity(level: SensitivityLevel) {
         _sensitivityLevel.value = level
-        // Apply the sensitivity level's threshold to blocking preferences
+
         val updated = _blockingPreferences.value.copy(
             minConfidenceThreshold = level.confidenceThreshold
         )
         _blockingPreferences.value = updated
         apiKeyManager.saveBlockingPreferences(updated)
     }
-
-    // ── Blocking Preferences Actions ──────────────────────────────────────────
 
     fun updateBlockingPreference(category: String, block: Boolean) {
         val current = _blockingPreferences.value
@@ -109,8 +106,6 @@ class SettingsViewModel @Inject constructor(
         apiKeyManager.saveBlockingPreferences(updated)
     }
 
-    // ── AI Model Preferences Actions ──────────────────────────────────────────
-
     fun toggleCascading(enabled: Boolean) {
         updateAIModelPrefs { it.copy(enableCascading = enabled) }
     }
@@ -124,8 +119,6 @@ class SettingsViewModel @Inject constructor(
         _aiModelPreferences.value = updated
         apiKeyManager.saveAIModelPreferences(updated)
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private fun saveKey(
         key: String,

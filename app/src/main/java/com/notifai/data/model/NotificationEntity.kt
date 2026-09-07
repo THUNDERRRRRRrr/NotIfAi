@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 
-/** Room TypeConverter for the [Category] enum. */
 class CategoryConverter {
     @TypeConverter
     fun fromCategory(category: Category): String = category.name

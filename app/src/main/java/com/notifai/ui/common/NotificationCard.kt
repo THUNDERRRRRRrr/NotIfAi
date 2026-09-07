@@ -23,7 +23,6 @@ import com.notifai.data.model.NotificationEntity
 import com.notifai.ui.theme.NotifAITheme
 import java.util.concurrent.TimeUnit
 
-/** Converts a timestamp to a human-readable relative string. */
 fun Long.toTimeAgo(): String {
     val diff = System.currentTimeMillis() - this
     return when {
@@ -35,10 +34,6 @@ fun Long.toTimeAgo(): String {
     }
 }
 
-/**
- * Single row item representing a [NotificationEntity] in a list.
- * Shows app name, title, category badge, and relative timestamp.
- */
 @Composable
 fun NotificationCard(
     entity: NotificationEntity,

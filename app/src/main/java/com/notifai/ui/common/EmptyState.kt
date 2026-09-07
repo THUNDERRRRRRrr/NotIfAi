@@ -19,9 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.notifai.ui.theme.NotifAITheme
 
-/**
- * Centered empty-state layout with icon, title, and subtitle.
- */
 @Composable
 fun EmptyState(
     icon: ImageVector,

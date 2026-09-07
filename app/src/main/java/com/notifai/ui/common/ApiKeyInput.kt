@@ -42,15 +42,6 @@ import kotlinx.coroutines.delay
 
 private val SavedGreen = Color(0xFF2E7D32)
 
-/**
- * API key input field with show/hide toggle and an inline Save button.
- *
- * [saveState] drives visual feedback:
- *  - Loading  → spinner replaces Save button
- *  - Success("saved") → green ✓ icon + "Saved!" label for 2 s, then reverts
- *  - Error    → red error text below the field
- *  - Success("idle")  → normal Save button
- */
 @Composable
 fun ApiKeyInput(
     label: String,
@@ -61,7 +52,7 @@ fun ApiKeyInput(
     modifier: Modifier = Modifier,
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
-    // Transient "just saved" flag — auto-clears after 2 s
+
     var justSaved by remember { mutableStateOf(false) }
 
     LaunchedEffect(saveState) {
@@ -129,7 +120,6 @@ fun ApiKeyInput(
             }
         }
 
-        // Success "Saved!" label
         AnimatedVisibility(visible = justSaved, enter = fadeIn(), exit = fadeOut()) {
             Spacer(Modifier.height(4.dp))
             Text(
@@ -140,7 +130,6 @@ fun ApiKeyInput(
             )
         }
 
-        // Error label
         if (isError) {
             Spacer(Modifier.height(4.dp))
             Text(

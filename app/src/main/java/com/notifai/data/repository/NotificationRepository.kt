@@ -10,16 +10,10 @@ import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Single source of truth for notification data.
- * ViewModels and Services interact only with this class, never with the DAO directly.
- */
 @Singleton
 class NotificationRepository @Inject constructor(
     private val dao: NotificationDao,
 ) {
-
-    // ── Writes ────────────────────────────────────────────────────────────────
 
     suspend fun saveNotification(entity: NotificationEntity) =
         dao.insertNotification(entity)
@@ -34,8 +28,6 @@ class NotificationRepository @Inject constructor(
         dao.deleteNotificationsOlderThan(timestamp)
 
     suspend fun clearAll() = dao.deleteAll()
-
-    // ── Reads ─────────────────────────────────────────────────────────────────
 
     fun getRecentNotifications(limit: Int = 20): Flow<List<NotificationEntity>> =
         dao.getRecentNotifications(limit)
@@ -52,12 +44,6 @@ class NotificationRepository @Inject constructor(
     fun getNotificationsByCategory(category: Category): Flow<List<NotificationEntity>> =
         dao.getNotificationsByCategory(category)
 
-    // ── Dashboard stats ───────────────────────────────────────────────────────
-
-    /**
-     * Emits a fresh [DashboardStats] whenever any underlying count changes.
-     * Uses [combine] so the UI always receives a complete, consistent snapshot.
-     */
     fun getDashboardStats(): Flow<DashboardStats> {
         val startOfDay = todayMidnightMillis()
         return combine(
@@ -77,8 +63,6 @@ class NotificationRepository @Inject constructor(
 
     fun getTodayBlockedCount(): Flow<Int> =
         dao.getTodayBlockedCount(todayMidnightMillis())
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private fun todayMidnightMillis(): Long =
         Calendar.getInstance().apply {

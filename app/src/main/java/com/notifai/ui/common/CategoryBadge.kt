@@ -21,7 +21,6 @@ import com.notifai.ui.theme.PromotionalOrange
 import com.notifai.ui.theme.SpamRed
 import com.notifai.ui.theme.UnknownGray
 
-/** Returns the semantic color for a [Category]. */
 fun Category.color(): Color = when (this) {
     Category.OTP         -> OtpBlue
     Category.DELIVERY    -> DeliveryGreen
@@ -32,9 +31,6 @@ fun Category.color(): Color = when (this) {
     Category.UNKNOWN     -> UnknownGray
 }
 
-/**
- * Small colored pill displaying a notification [category] label.
- */
 @Composable
 fun CategoryBadge(
     category: Category,

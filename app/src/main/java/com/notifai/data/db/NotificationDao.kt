@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NotificationDao {
 
-    // ── Writes ────────────────────────────────────────────────────────────────
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNotification(entity: NotificationEntity)
 
@@ -27,8 +25,6 @@ interface NotificationDao {
 
     @Query("DELETE FROM notifications")
     suspend fun deleteAll()
-
-    // ── Full-list reads ───────────────────────────────────────────────────────
 
     @Query("SELECT * FROM notifications ORDER BY timestamp DESC LIMIT :limit")
     fun getRecentNotifications(limit: Int): Flow<List<NotificationEntity>>
@@ -45,12 +41,6 @@ interface NotificationDao {
     @Query("SELECT * FROM notifications WHERE category = :category ORDER BY timestamp DESC")
     fun getNotificationsByCategory(category: Category): Flow<List<NotificationEntity>>
 
-    // ── Aggregated counts ─────────────────────────────────────────────────────
-
-    /**
-     * [startOfDay] is Unix epoch ms for local midnight, supplied by the
-     * repository so this query stays clock-agnostic and easily testable.
-     */
     @Query(
         """
         SELECT COUNT(*) FROM notifications

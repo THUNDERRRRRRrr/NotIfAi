@@ -32,17 +32,6 @@ import kotlinx.coroutines.supervisorScope
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.inject.Inject
 
-/**
- * Core notification-interception service.
- *
- * Lifecycle:
- *  - Declared in AndroidManifest with BIND_NOTIFICATION_LISTENER_SERVICE permission.
- *  - The user grants access via Settings → Notification Access.
- *  - Runs as a foreground service to survive memory pressure.
- *  - Batches posted notifications and processes them every [BATCH_INTERVAL_MS].
- *  - Calls [AIProviderManager.classifyNotification] for each notification, then
- *    persists the result via [NotificationRepository].
- */
 @AndroidEntryPoint
 class NotifListenerService : NotificationListenerService() {
 
@@ -53,15 +42,11 @@ class NotifListenerService : NotificationListenerService() {
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
 
-    /** Thread-safe queue of raw notifications waiting to be classified. */
     private val pendingQueue = ConcurrentLinkedQueue<RawNotification>()
 
-    /** Cache of recently processed notifications to avoid duplicate API calls and DB entries. */
     private val processedCache = LruCache<String, Boolean>(500)
 
     private var batchJob: Job? = null
-
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     override fun onCreate() {
         super.onCreate()
@@ -77,18 +62,13 @@ class NotifListenerService : NotificationListenerService() {
         Log.d(TAG, "NotifListenerService destroyed")
     }
 
-    // ── Notification interception ─────────────────────────────────────────────
-
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         sbn ?: return
 
-        // Ignore our own notifications (foreground channel, etc.)
         if (sbn.packageName == packageName) return
 
-        // Ignore group summaries to prevent double-counting grouped notifications
         if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0) return
 
-        // Ignore system notifications that carry no meaningful text
         val extras = sbn.notification?.extras ?: return
         val title = extras.getString(Notification.EXTRA_TITLE).orEmpty()
         val text = (extras.getCharSequence(Notification.EXTRA_TEXT) ?: "").toString()
@@ -114,8 +94,6 @@ class NotifListenerService : NotificationListenerService() {
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) = Unit
 
-    // ── Batch processor ───────────────────────────────────────────────────────
-
     private fun startBatchProcessor() {
         batchJob = serviceScope.launch {
             while (isActive) {
@@ -140,19 +118,19 @@ class NotifListenerService : NotificationListenerService() {
             for (raw in batch) {
                 launch {
                     val cacheKey = "${raw.packageName}|${raw.title}|${raw.body}"
-                    // LruCache operations are thread-safe
+
                     if (processedCache.get(cacheKey) != null) {
                         return@launch
                     }
                     processedCache.put(cacheKey, true)
 
                     runCatching {
-                        // Check per-app mode override before calling AI
+
                         val appMode = getAppMode(raw.packageName)
 
                         when (appMode) {
                             "ALWAYS_ALLOW" -> {
-                                // Skip AI — save as IMPORTANT, never block
+
                                 val entity = NotificationEntity(
                                     packageName = raw.packageName,
                                     appName = raw.appName,
@@ -169,7 +147,7 @@ class NotifListenerService : NotificationListenerService() {
                                 return@launch
                             }
                             "ALWAYS_BLOCK" -> {
-                                // Skip AI — save as SPAM and block immediately
+
                                 val entity = NotificationEntity(
                                     packageName = raw.packageName,
                                     appName = raw.appName,
@@ -188,7 +166,7 @@ class NotifListenerService : NotificationListenerService() {
                                 } catch (_: Exception) { }
                                 return@launch
                             }
-                            else -> { /* AUTO — fall through to AI classification */ }
+                            else -> {  }
                         }
 
                         val response = aiProviderManager.classifyNotification(
@@ -197,8 +175,6 @@ class NotifListenerService : NotificationListenerService() {
                             body = raw.body,
                         )
 
-                        // Use the BlockingEngine (user prefs + confidence) instead of
-                        // blindly trusting the AI's shouldBlock flag.
                         val shouldBlock = blockingEngine.shouldBlock(
                             response.category,
                             response.confidence,
@@ -221,7 +197,6 @@ class NotifListenerService : NotificationListenerService() {
 
                         repository.saveNotification(entity)
 
-                        // Cancel the notification if AI says it should be blocked
                         if (entity.isBlocked) {
                             try {
                                 cancelNotification(raw.sbnKey)
@@ -239,8 +214,6 @@ class NotifListenerService : NotificationListenerService() {
         }
     }
 
-    // ── Foreground notification ───────────────────────────────────────────────
-
     private fun buildForegroundNotification(): Notification {
         createNotificationChannel()
 
@@ -253,7 +226,7 @@ class NotifListenerService : NotificationListenerService() {
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("NotifAI is running")
-            .setContentText("Filtering your notifications with AI")
+            .setContentText("Filtering your notifications securely")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentIntent(tapIntent)
             .setOngoing(true)
@@ -274,18 +247,15 @@ class NotifListenerService : NotificationListenerService() {
             .createNotificationChannel(channel)
     }
 
-    // ── Internal models ───────────────────────────────────────────────────────
-
     private data class RawNotification(
         val packageName: String,
         val appName: String,
         val title: String,
         val body: String,
         val timestamp: Long,
-        val sbnKey: String,   // StatusBarNotification.key — needed to cancel
+        val sbnKey: String,   
     )
 
-    /** Reads the per-app mode from SharedPreferences (set by AppSettingsViewModel). */
     private fun getAppMode(packageName: String): String {
         val prefs = getSharedPreferences("app_modes", Context.MODE_PRIVATE)
         return prefs.getString(packageName, "AUTO") ?: "AUTO"

@@ -2,12 +2,10 @@ package com.notifai.ai.model
 
 import com.google.gson.annotations.SerializedName
 
-// Exceptions
 class GroqException(message: String) : Exception(message)
 class OpenRouterException(message: String) : Exception(message)
 class GeminiException(message: String) : Exception(message)
 
-// OpenAI Compatible Models (Groq, OpenRouter)
 data class OpenAIRequest(
     @SerializedName("model") val model: String,
     @SerializedName("messages") val messages: List<OpenAIMessage>,
@@ -32,7 +30,6 @@ data class OpenAIChoice(
     @SerializedName("message") val message: OpenAIMessage?
 )
 
-// Gemini Models
 data class GeminiRequest(
     @SerializedName("systemInstruction") val systemInstruction: GeminiContent?,
     @SerializedName("contents") val contents: List<GeminiContent>,
