@@ -169,12 +169,11 @@ class SettingsViewModel @Inject constructor(
         stateFlow: MutableStateFlow<UiState<String>>,
         block: () -> Unit,
     ) {
-        if (key.isBlank()) return
         viewModelScope.launch {
             stateFlow.value = UiState.Loading
             runCatching { block() }
                 .onSuccess { stateFlow.value = UiState.Success("saved") }
-                .onFailure { stateFlow.value = UiState.Error("Failed to save key: ${it.message}") }
+                .onFailure { stateFlow.value = UiState.Error("Failed to save: ${it.message}") }
         }
     }
 
